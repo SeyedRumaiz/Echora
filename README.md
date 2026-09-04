@@ -41,6 +41,65 @@ Users write entries naturally, while **Gemini 2.5 Flash** discovers recurring th
              +-------------------------------+        +-------------------------------+
 ```
 
+## 🔐 Privacy, Security & GDPR-Aligned Design
+
+ECHORA is designed around key GDPR principles such as privacy by design, data minimization, data portability, and user control.
+
+| Principle | ECHORA Implementation |
+| :--- | :--- |
+| **Data Access & Portability** | Users can export their profile, journal entries, conversations, and generated insights as a structured, machine-readable JSON archive. |
+| **Right to Erasure** | A protected Delete All Data workflow permanently removes the user's application data from the supported Firestore collections and clears locally stored application data. |
+| **Privacy by Design** | Firestore uses UID-scoped data paths and default-deny Security Rules. Access requires an authenticated Firebase user whose UID matches the requested user's data path. |
+| **Data Minimization** | ECHORA does not include advertising pixels or unnecessary marketing trackers. Journal data is collected for the application's core journaling and reflection functionality. |
+| **User Control** | Users can review, export, and delete their stored journal data from Settings. |
+| **AI Transparency** | AI-generated reflections are distinguished from source journal content, and grounded responses can reference the underlying journal entries. |
+
+---
+
+## 🔑 Secure Gemini Architecture
+
+### Development
+
+```text
+Local .env
+    ↓
+Express Backend
+    ↓
+Gemini API
+```
+
+The Gemini API key is available only to the server process and is excluded from the frontend bundle and source repository.
+
+### Production
+
+```text
+Google Cloud Secret Manager
+        ↓
+Cloud Run + Least-Privilege IAM
+        ↓
+Express Backend
+        ↓
+Gemini API
+```
+
+In production, the Gemini credential is supplied to the Cloud Run runtime through Google Cloud Secret Manager. The React/Vite frontend never imports `@google/genai` and never receives the Gemini API credential.
+
+---
+
+## 🛡️ Data Isolation
+
+ECHORA uses a user-scoped Firestore architecture:
+
+```text
+users/{uid}/journalEntries/{entryId}
+users/{uid}/conversations/{conversationId}
+users/{uid}/insights/{insightId}
+```
+
+Firestore Security Rules enforce authentication and UID/path matching, with unauthorized access denied by default.
+
+This means the security boundary is enforced at the database layer, rather than relying solely on frontend filtering.
+
 ---
 
 ## 🚀 Key Technical Highlights
@@ -74,7 +133,7 @@ Users write entries naturally, while **Gemini 2.5 Flash** discovers recurring th
 
 ### Prerequisites
 - Node.js 20+ or 22+
-- Google Cloud Gemini API key (or Google AI Studio key)
+- Gemini API key (from Google Cloud Vertex AI or Google AI Studio) for local environment testing. *(Note: For production, this key is provisioned exclusively through Google Cloud Secret Manager to Cloud Run).*
 
 ### Step 1: Clone and Install
 ```bash
