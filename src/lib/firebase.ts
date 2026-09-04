@@ -172,7 +172,7 @@ export async function getJournalEntries(uid: string): Promise<JournalEntry[]> {
     return entries;
   } catch (error) {
     console.warn('Firestore fetch failed, checking local fallback:', error);
-    const local = localStorage.getItem(`echora_entries_${uid}`) || localStorage.getItem(`chrona_entries_${uid}`) || localStorage.getItem(`reflectiq_entries_${uid}`);
+    const local = localStorage.getItem(`echora_entries_${uid}`);
     if (local) {
       try {
         return JSON.parse(local);
@@ -226,7 +226,7 @@ export async function deleteJournalEntry(uid: string, entryId: string): Promise<
 
   const existing = await getJournalEntries(uid);
   const filtered = existing.filter(e => e.id !== entryId);
-  localStorage.setItem(`chrona_entries_${uid}`, JSON.stringify(filtered));
+  localStorage.setItem(`echora_entries_${uid}`, JSON.stringify(filtered));
 }
 
 /* -------------------------------------------------------------
@@ -244,7 +244,7 @@ export async function getConversations(uid: string): Promise<Conversation[]> {
     return convs;
   } catch (error) {
     console.warn('Firestore conversations fetch failed:', error);
-    const local = localStorage.getItem(`echora_conversations_${uid}`) || localStorage.getItem(`chrona_conversations_${uid}`) || localStorage.getItem(`reflectiq_conversations_${uid}`);
+    const local = localStorage.getItem(`echora_conversations_${uid}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -286,7 +286,7 @@ export async function getMessages(uid: string, conversationId: string): Promise<
     return msgs;
   } catch (error) {
     console.warn('Firestore messages fetch failed:', error);
-    const local = localStorage.getItem(`echora_msgs_${uid}_${conversationId}`) || localStorage.getItem(`chrona_msgs_${uid}_${conversationId}`) || localStorage.getItem(`reflectiq_msgs_${uid}_${conversationId}`);
+    const local = localStorage.getItem(`echora_msgs_${uid}_${conversationId}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -319,7 +319,7 @@ export async function getInsights(uid: string): Promise<LongitudinalInsight[]> {
     snap.forEach(d => list.push({ id: d.id, ...(d.data() as any) }));
     return list;
   } catch (error) {
-    const local = localStorage.getItem(`echora_insights_${uid}`) || localStorage.getItem(`chrona_insights_${uid}`) || localStorage.getItem(`reflectiq_insights_${uid}`);
+    const local = localStorage.getItem(`echora_insights_${uid}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -347,11 +347,5 @@ export async function deleteAllUserData(uid: string): Promise<void> {
   localStorage.removeItem(`echora_entries_${uid}`);
   localStorage.removeItem(`echora_conversations_${uid}`);
   localStorage.removeItem(`echora_insights_${uid}`);
-  localStorage.removeItem(`chrona_entries_${uid}`);
-  localStorage.removeItem(`chrona_conversations_${uid}`);
-  localStorage.removeItem(`chrona_insights_${uid}`);
-  localStorage.removeItem(`reflectiq_entries_${uid}`);
-  localStorage.removeItem(`reflectiq_conversations_${uid}`);
-  localStorage.removeItem(`reflectiq_insights_${uid}`);
   // In demo or live mode, cleanup local references
 }

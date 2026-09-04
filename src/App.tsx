@@ -50,11 +50,7 @@ export default function App() {
 
   // Theme
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return (
-      localStorage.getItem('echora_theme') ||
-      localStorage.getItem('chrona_theme') ||
-      localStorage.getItem('reflectiq_theme')
-    ) === 'dark';
+    return localStorage.getItem('echora_theme') === 'dark';
   });
 
   // Data State
@@ -97,10 +93,7 @@ export default function App() {
 
   // Listen to Firebase Auth state
   useEffect(() => {
-    const savedDemo =
-      localStorage.getItem('echora_is_demo') ||
-      localStorage.getItem('chrona_is_demo') ||
-      localStorage.getItem('reflectiq_is_demo');
+    const savedDemo = localStorage.getItem('echora_is_demo');
 
     if (savedDemo === 'true') {
       setUser(DEMO_USER);
@@ -362,8 +355,6 @@ export default function App() {
   // Auth Handlers
   const handleSignOut = async () => {
     localStorage.removeItem('echora_is_demo');
-    localStorage.removeItem('chrona_is_demo');
-    localStorage.removeItem('reflectiq_is_demo');
     await signOutUser();
     setUser(null);
     showToast('Signed out of ECHORA.', 'info');

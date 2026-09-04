@@ -1,5 +1,5 @@
 # ==============================================================================
-# Chrona - Production Dockerfile for Google Cloud Run
+# ECHORA - Production Dockerfile for Google Cloud Run
 # Optimized for Google Cloud Gen AI Academy APAC Ideathon
 # ==============================================================================
 

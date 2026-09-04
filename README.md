@@ -1,9 +1,9 @@
-# Chrona — Private AI-Powered Journal & Reflection System
+# ECHORA — Private AI-Powered Journal & Reflection System
 
 > **Google Cloud Gen AI Academy APAC Ideathon Submission**  
-> *“Understand your story, not just record it.”*
+> *“Your story, understood over time.”*
 
-Chrona is a production-quality, private AI-powered personal reflection companion. Unlike superficial AI wrappers or simple CRUD diary apps, Chrona helps users understand their lived experiences over time. 
+ECHORA is a production-quality, private AI-powered personal reflection companion. Unlike superficial AI wrappers or simple CRUD diary apps, ECHORA helps users understand their lived experiences over time. 
 
 Users write entries naturally, while **Gemini 2.5 Flash** discovers recurring themes, tracks implicit goals, synthesizes longitudinal trends, and conducts genuine multi-turn inquiry sessions—**grounded strictly in the user's authorized journal archive with verified interactive source citations and zero cross-tenant leakage**.
 
@@ -78,8 +78,8 @@ Users write entries naturally, while **Gemini 2.5 Flash** discovers recurring th
 
 ### Step 1: Clone and Install
 ```bash
-git clone https://github.com/your-org/chrona.git
-cd chrona
+git clone https://github.com/your-org/echora.git
+cd echora
 npm install
 ```
 
@@ -103,7 +103,7 @@ The application will boot at `http://localhost:3000`.
 
 ## 🔒 Firestore Security Rules (`firestore.rules`)
 
-Chrona enforces strict per-user scoping at the database level:
+ECHORA enforces strict per-user scoping at the database level:
 
 ```rules
 rules_version = '2';
@@ -178,24 +178,24 @@ printf "%s" "YOUR_ACTUAL_GEMINI_API_KEY" | \
 ### 4. Create Dedicated Least-Privilege Service Account for Cloud Run
 ```bash
 # Create service account
-gcloud iam service-accounts create chrona-runner \
-  --display-name="Chrona Cloud Run Runner"
+gcloud iam service-accounts create echora-runner \
+  --display-name="ECHORA Cloud Run Runner"
 
 # Grant Secret Manager Secret Accessor role ONLY to this service account
 gcloud secrets add-iam-policy-binding GEMINI_API_KEY \
-  --member="serviceAccount:chrona-runner@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --member="serviceAccount:echora-runner@${PROJECT_ID}.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
 
 ### 5. Build and Deploy to Cloud Run
 ```bash
-gcloud run deploy chrona \
+gcloud run deploy echora \
   --source . \
   --region $REGION \
   --platform managed \
   --allow-unauthenticated \
   --port 3000 \
-  --service-account "chrona-runner@${PROJECT_ID}.iam.gserviceaccount.com" \
+  --service-account "echora-runner@${PROJECT_ID}.iam.gserviceaccount.com" \
   --set-secrets="GEMINI_API_KEY=GEMINI_API_KEY:latest"
 ```
 
