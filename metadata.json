@@ -1,0 +1,6 @@
+{
+  "name": "ECHORA",
+  "description": "Your story, understood over time. A private AI-powered personal memory and reflection product.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
