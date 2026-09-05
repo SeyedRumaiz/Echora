@@ -5,6 +5,7 @@ import { app } from './server/app';
 
 dotenv.config();
 
+
 // Cloud Run injects PORT at runtime; 3000 matches the Dockerfile's EXPOSE/ENV
 // for local dev, but reading the env var keeps this portable if that ever changes.
 const PORT = Number(process.env.PORT) || 3000;
