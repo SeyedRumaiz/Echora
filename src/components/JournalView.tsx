@@ -126,10 +126,14 @@ export const JournalView: React.FC<JournalViewProps> = ({
     setSaveStatus('unsaved');
   };
 
-  // Save entry
-  const handleSave = async () => {
+  // Save entry. `silent` is used by autosave so it never interrupts typing with
+  // a toast or an error about an empty draft -- only an explicit Save (button or
+  // Cmd+S) talks to the user.
+  const performSave = async ({ silent = false }: { silent?: boolean } = {}) => {
     if (!title.trim() && !content.trim()) {
-      onShowToast('Enter a title or thoughts before saving.', 'info');
+      if (!silent) {
+        onShowToast('Enter a title or thoughts before saving.', 'info');
+      }
       return;
     }
 
@@ -153,15 +157,21 @@ export const JournalView: React.FC<JournalViewProps> = ({
       onSelectEntry(saved);
       setHasUnsavedChanges(false);
       setSaveStatus('saved');
-      onShowToast('Journal entry saved.', 'success');
+      if (!silent) {
+        onShowToast('Journal entry saved.', 'success');
+      }
     } catch (err: any) {
       console.error('Save error:', err);
       setSaveStatus('unsaved');
-      onShowToast('Failed to save entry. Please try again.', 'error');
+      if (!silent) {
+        onShowToast('Failed to save entry. Please try again.', 'error');
+      }
     } finally {
       setIsSaving(false);
     }
   };
+
+  const handleSave = () => performSave({ silent: false });
 
   // Cmd+S / Ctrl+S keyboard shortcut
   useEffect(() => {
@@ -179,6 +189,20 @@ export const JournalView: React.FC<JournalViewProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [title, content, mood, tags, analysis, hasUnsavedChanges, isEditing]);
+
+  // Debounced autosave: once writing pauses for a couple seconds, quietly persist
+  // the draft so a closed tab or a lost connection never loses real writing.
+  useEffect(() => {
+    if (!isEditing || !hasUnsavedChanges) return;
+    if (!title.trim() && !content.trim()) return;
+
+    const timer = setTimeout(() => {
+      performSave({ silent: true });
+    }, 2500);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, content, mood, tags, hasUnsavedChanges, isEditing]);
 
   // Request single entry analysis
   const handleAnalyzeEntry = async () => {
