@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import type { JournalEntry } from '../types';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface SourceEntryModalProps {
   entry: JournalEntry | null;
@@ -8,6 +9,8 @@ interface SourceEntryModalProps {
 }
 
 export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClose }) => {
+  const dialogRef = useFocusTrap<HTMLDivElement>(!!entry);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -30,6 +33,8 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/60 backdrop-blur-xs animate-in fade-in"
       role="dialog"
       aria-modal="true"
