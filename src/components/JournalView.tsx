@@ -366,6 +366,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Title of this reflection..."
+            aria-label="Entry title"
             className="w-full font-editorial text-3xl sm:text-4xl font-medium text-stone-900 dark:text-stone-100 placeholder:text-stone-300 dark:placeholder:text-stone-700 bg-transparent border-0 outline-none p-0 tracking-tight leading-tight"
           />
 
