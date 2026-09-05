@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
-import {
-  ArrowRight,
-  ShieldCheck,
-  Key,
-  Server,
-  Database,
-  BookOpen,
-  Sparkles,
-  Sun,
-  Moon
-} from 'lucide-react';
+import React, { useCallback, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react';
+import { ArrowRight, Mail, Sun, Moon } from 'lucide-react';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../lib/firebase';
 import type { UserProfile } from '../types';
 
@@ -19,6 +10,21 @@ interface LandingViewProps {
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
 }
+
+// Fixed positions for the ambient "constellation" of moments behind the
+// hero — hand-placed (not randomized per render) so the scene is stable
+// and never redistributes itself on re-render.
+const HERO_MOTES: { left: string; top: string; size: number; delay: string }[] = [
+  { left: '8%', top: '22%', size: 3, delay: '0s' },
+  { left: '15%', top: '68%', size: 2, delay: '0.6s' },
+  { left: '24%', top: '40%', size: 2, delay: '1.4s' },
+  { left: '88%', top: '18%', size: 3, delay: '0.3s' },
+  { left: '80%', top: '62%', size: 2, delay: '2.1s' },
+  { left: '92%', top: '78%', size: 2, delay: '1s' },
+  { left: '50%', top: '10%', size: 2, delay: '1.8s' },
+  { left: '6%', top: '85%', size: 2, delay: '2.6s' },
+  { left: '68%', top: '88%', size: 3, delay: '0.9s' },
+];
 
 export const LandingView: React.FC<LandingViewProps> = ({
   onLoginSuccess,
@@ -31,6 +37,51 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+
+  const prefersReducedMotion = useReducedMotion();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const beginRef = useRef<HTMLElement>(null);
+
+  // Mouse-reactive parallax for the ambient background layer only —
+  // small, spring-smoothed, and only ever engaged on pointers that
+  // reported a real hover-capable, fine-pointer device (see
+  // handlePointerMove). Reduced-motion visitors never trigger it since
+  // the handler itself is a no-op for them.
+  const mvX = useMotionValue(0);
+  const mvY = useMotionValue(0);
+  const springX = useSpring(mvX, { stiffness: 40, damping: 20, mass: 0.6 });
+  const springY = useSpring(mvY, { stiffness: 40, damping: 20, mass: 0.6 });
+  const glowAX = springX;
+  const glowAY = springY;
+  const glowBX = useTransform(springX, (v) => -v);
+  const glowBY = useTransform(springY, (v) => -v);
+  const moteX = useTransform(springX, (v) => v * 1.6);
+  const moteY = useTransform(springY, (v) => v * 1.6);
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (prefersReducedMotion || e.pointerType !== 'mouse' || !heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+      const relY = (e.clientY - rect.top) / rect.height - 0.5;
+      const max = 18;
+      mvX.set(relX * max * 2);
+      mvY.set(relY * max * 2);
+    },
+    [prefersReducedMotion, mvX, mvY]
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    mvX.set(0);
+    mvY.set(0);
+  }, [mvX, mvY]);
+
+  const scrollToBegin = () => {
+    beginRef.current?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    // Move focus along with the scroll so keyboard and screen-reader
+    // users land where the page visually goes, not just mouse users.
+    window.setTimeout(() => beginRef.current?.focus({ preventScroll: true }), prefersReducedMotion ? 0 : 450);
+  };
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
@@ -67,85 +118,194 @@ export const LandingView: React.FC<LandingViewProps> = ({
     }
   };
 
+  // A single stagger for the hero's entrance — collapses to an
+  // instant, motionless appearance when the visitor has asked for
+  // reduced motion.
+  const heroContainerVariants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: prefersReducedMotion ? 0 : 0.12,
+        delayChildren: prefersReducedMotion ? 0 : 0.15
+      }
+    }
+  };
+  const riseIn = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 14 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: prefersReducedMotion ? 0.01 : 0.7, ease: [0.16, 1, 0.3, 1] as const }
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#131211] text-stone-900 dark:text-stone-100 selection:bg-[#E4DFD5]">
-      {/* Editorial Navigation */}
-      <header className="max-w-4xl w-full mx-auto px-6 py-8 flex items-center justify-between">
-        <div>
-          <span className="font-editorial text-2xl font-medium tracking-tight text-stone-900 dark:text-stone-100">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#131211] text-stone-900 dark:text-stone-100 selection:bg-[#E4DFD5]">
+      {/* ============================================================
+          HERO SCENE — the cinematic opening moment
+          ============================================================ */}
+      <div
+        ref={heroRef}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+        className="relative min-h-[100dvh] flex flex-col overflow-hidden"
+      >
+        {/* Ambient background — decorative only, never in the tab order */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+          <motion.div style={{ x: glowAX, y: glowAY }} className="absolute -top-24 -left-24 w-[34rem] h-[34rem]">
+            <div className="w-full h-full rounded-full bg-[#E2DCD4] dark:bg-[#3A342C] blur-3xl opacity-40 echora-glow-drift" />
+          </motion.div>
+          <motion.div style={{ x: glowBX, y: glowBY }} className="absolute -bottom-40 -right-32 w-[30rem] h-[30rem]">
+            <div className="w-full h-full rounded-full bg-[#EDE7DC] dark:bg-[#2A2620] blur-3xl opacity-40 echora-glow-drift" style={{ animationDelay: '-9s' }} />
+          </motion.div>
+
+          {/* Echoing rings, centered behind the wordmark */}
+          <div className="absolute left-1/2 top-[44%] w-[20rem] h-[20rem] -ml-[10rem] -mt-[10rem] sm:w-[26rem] sm:h-[26rem] sm:-ml-[13rem] sm:-mt-[13rem]">
+            <span className="echora-ring" style={{ animationDelay: '0s' }} />
+            <span className="echora-ring" style={{ animationDelay: '2.2s' }} />
+            <span className="echora-ring" style={{ animationDelay: '4.4s' }} />
+          </div>
+
+          {/* A sparse constellation of moments */}
+          <motion.div style={{ x: moteX, y: moteY }} className="absolute inset-0">
+            {HERO_MOTES.map((m, i) => (
+              <span
+                key={i}
+                className="echora-mote absolute rounded-full bg-stone-500/40 dark:bg-stone-300/30"
+                style={{ left: m.left, top: m.top, width: m.size, height: m.size, animationDelay: m.delay }}
+              />
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Minimal overlay nav */}
+        <header className="relative z-10 max-w-5xl w-full mx-auto px-6 py-6 flex items-center justify-between">
+          <button
+            id="landing-logo-btn"
+            onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' })}
+            className="p-0.5 opacity-80 hover:opacity-100 transition-opacity"
+            aria-label="EchoraOS — scroll to top"
+          >
+            <img src="/icon-192.png" alt="" className="w-7 h-7 rounded-md block" />
+          </button>
+
+          <div className="flex items-center gap-3">
+            <button
+              id="landing-theme-toggle"
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
+              title="Toggle theme"
+              aria-label="Toggle theme"
+            >
+              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            <button
+              id="landing-signin-nav-btn"
+              onClick={() => { setAuthMode('signin'); setAuthError(null); }}
+              className="text-xs font-medium text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 px-3 py-1.5 transition-colors"
+            >
+              Sign In
+            </button>
+
+            <button
+              id="landing-demo-top-btn"
+              onClick={onLaunchDemo}
+              className="text-xs font-semibold px-4 py-2 rounded-xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 hover:opacity-90 transition-opacity shadow-xs"
+            >
+              Showcase Mode
+            </button>
+          </div>
+        </header>
+
+        {/* Centered hero content */}
+        <motion.div
+          variants={heroContainerVariants}
+          initial="hidden"
+          animate="show"
+          className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 -mt-8"
+        >
+          <motion.span
+            variants={riseIn}
+            className="text-[11px] sm:text-xs text-stone-500 dark:text-stone-400 font-mono tracking-wide mb-6"
+          >
+            Google Cloud Gen AI Academy APAC Ideathon
+          </motion.span>
+
+          <motion.h1
+            variants={riseIn}
+            className="font-editorial font-medium tracking-tight text-stone-900 dark:text-stone-100 leading-[0.98]"
+            style={{ fontSize: 'clamp(3.25rem, 10vw, 7rem)' }}
+          >
             EchoraOS
-          </span>
-          <span className="hidden sm:inline text-xs text-stone-500 dark:text-stone-400 ml-3 pl-3 border-l border-[#E8E4DC] dark:border-[#2B2724]">
+          </motion.h1>
+
+          <motion.p
+            variants={riseIn}
+            className="font-editorial italic text-stone-600 dark:text-stone-400 mt-4"
+            style={{ fontSize: 'clamp(1.1rem, 2.4vw, 1.6rem)' }}
+          >
             Your story, understood over time.
-          </span>
-        </div>
+          </motion.p>
 
-        <div className="flex items-center gap-3">
-          <button
-            id="landing-theme-toggle"
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-2 text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
-            title="Toggle theme"
-            aria-label="Toggle theme"
+          <motion.div variants={riseIn} className="flex flex-col sm:flex-row items-center gap-3 mt-10">
+            <button
+              id="hero-begin-btn"
+              onClick={scrollToBegin}
+              className="px-7 py-3.5 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-xs"
+            >
+              <span>Begin your story</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              id="hero-explore-btn"
+              onClick={onLaunchDemo}
+              className="px-6 py-3.5 rounded-xl text-stone-700 dark:text-stone-300 font-medium text-sm hover:text-stone-900 dark:hover:text-stone-100 transition-colors underline decoration-[#D8D2C6] dark:decoration-[#2E2A25] decoration-1 underline-offset-4"
+            >
+              Explore EchoraOS
+            </button>
+          </motion.div>
+        </motion.div>
+
+        {/* Scroll cue — purely decorative, so it is skipped entirely
+            (not just visually stilled) under reduced motion rather
+            than left inert on screen. */}
+        {!prefersReducedMotion && (
+          <div
+            className="relative z-10 pb-8 flex flex-col items-center gap-1.5 text-stone-400 dark:text-stone-600"
+            aria-hidden="true"
           >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-          </button>
+            <span className="text-[10px] uppercase tracking-[0.2em]">Scroll</span>
+            <span className="echora-scroll-cue block w-px h-6 bg-current" />
+          </div>
+        )}
+      </div>
 
-          <button
-            id="landing-signin-nav-btn"
-            onClick={() => { setAuthMode('signin'); setAuthError(null); }}
-            className="text-xs font-medium text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100 px-3 py-1.5 transition-colors"
-          >
-            Sign In
-          </button>
-
-          <button
-            id="landing-demo-top-btn"
-            onClick={onLaunchDemo}
-            className="text-xs font-semibold px-4 py-2 rounded-xl bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 hover:opacity-90 transition-opacity shadow-xs"
-          >
-            Showcase Mode
-          </button>
-        </div>
-      </header>
-
-      {/* Main Editorial Hero */}
-      <main className="flex-1 max-w-3xl w-full mx-auto px-6 pt-12 pb-24 flex flex-col items-center text-center space-y-10">
-        {/* Ideathon quiet marker */}
-        <div className="inline-flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400 font-mono tracking-wide">
-          <span>Google Cloud Gen AI Academy APAC Ideathon</span>
-        </div>
-
-        {/* Hero Title */}
-        <div className="space-y-4">
-          <h1 className="font-editorial text-4xl sm:text-6xl font-medium tracking-tight text-stone-900 dark:text-stone-100 leading-[1.15]">
-            Your story, <br />
-            <span className="italic font-normal text-stone-600 dark:text-stone-400">
-              understood over time.
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-stone-600 dark:text-stone-400 max-w-xl mx-auto leading-relaxed pt-2 font-normal">
-            A private personal reflection companion. Write freely in a calm, distraction-free journal. When you ask questions, EchoraOS reflects on your thoughts with honest citations to your own history.
+      {/* ============================================================
+          ARRIVAL — the real entry points
+          ============================================================ */}
+      <section
+        id="begin"
+        ref={beginRef}
+        tabIndex={-1}
+        className="max-w-3xl w-full mx-auto px-6 pt-20 pb-16 scroll-mt-6 outline-none"
+      >
+        <div className="text-center space-y-3 mb-10">
+          <h2 className="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 dark:text-stone-100">
+            Begin your story
+          </h2>
+          <p className="text-sm sm:text-base text-stone-600 dark:text-stone-400 max-w-xl mx-auto leading-relaxed">
+            A private, distraction-free journal. When you ask questions, EchoraOS reflects on your own history — with honest citations, never invention.
           </p>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto pt-2">
-          <button
-            id="hero-launch-demo-btn"
-            onClick={onLaunchDemo}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-medium text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-xs"
-          >
-            <span>Explore Showcase Mode</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-
+        <div className="max-w-sm mx-auto space-y-3">
           <button
             id="hero-google-auth-btn"
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full sm:w-auto px-5 py-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent text-stone-800 dark:text-stone-200 font-medium text-sm hover:bg-[#F0EDE6] dark:hover:bg-[#1E1C1A] transition-colors flex items-center justify-center gap-2.5"
+            className="w-full px-5 py-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent text-stone-800 dark:text-stone-200 font-medium text-sm hover:bg-[#F0EDE6] dark:hover:bg-[#1E1C1A] transition-colors flex items-center justify-center gap-2.5 disabled:opacity-60"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -167,16 +327,36 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </svg>
             <span>Continue with Google</span>
           </button>
+
+          <button
+            id="hero-email-auth-btn"
+            onClick={() => { setAuthMode('signin'); setAuthError(null); }}
+            className="w-full px-5 py-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent text-stone-800 dark:text-stone-200 font-medium text-sm hover:bg-[#F0EDE6] dark:hover:bg-[#1E1C1A] transition-colors flex items-center justify-center gap-2.5"
+          >
+            <Mail className="w-4 h-4" />
+            <span>Continue with email</span>
+          </button>
+
+          {authError && (
+            <div className="p-3 rounded-lg text-xs text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50">
+              {authError}
+            </div>
+          )}
+
+          <p className="text-center text-xs text-stone-500 dark:text-stone-500 pt-2">
+            Just looking?{' '}
+            <button
+              id="hero-launch-demo-btn"
+              onClick={onLaunchDemo}
+              className="underline hover:text-stone-800 dark:hover:text-stone-300"
+            >
+              Explore Showcase Mode
+            </button>
+          </p>
         </div>
 
-        {authError && (
-          <div className="p-3 rounded-lg text-xs text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 max-w-md">
-            {authError}
-          </div>
-        )}
-
         {/* Editorial Preview: Talk to your history */}
-        <div className="w-full max-w-2xl text-left pt-12 space-y-4 border-t border-[#E8E4DC] dark:border-[#2B2724]">
+        <div className="w-full text-left pt-16 mt-12 space-y-4 border-t border-[#E8E4DC] dark:border-[#2B2724]">
           <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
             The Reflection Experience
           </span>
@@ -209,7 +389,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
 
         {/* Principles / Pillars */}
-        <div className="pt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full text-left border-t border-[#E8E4DC] dark:border-[#2B2724]">
+        <div className="pt-16 mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6 w-full text-left border-t border-[#E8E4DC] dark:border-[#2B2724]">
           <div className="space-y-1.5">
             <h3 className="font-editorial text-lg font-medium text-stone-900 dark:text-stone-100">
               Strict User Isolation
@@ -237,12 +417,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </p>
           </div>
         </div>
-      </main>
+      </section>
 
       {/* Auth Modal (Email/Password alternative) */}
       {authMode && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/60 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-[#FAF8F5] dark:bg-[#161413] border border-[#E8E4DC] dark:border-[#2B2724] rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+          <div className="bg-[#FAF8F5] dark:bg-[#161413] border border-[#E8E4DC] dark:border-[#2B2724] rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between">
               <h3 className="font-editorial text-xl font-medium text-stone-900 dark:text-stone-100">
                 {authMode === 'signup' ? 'Create Account' : 'Sign In'}
