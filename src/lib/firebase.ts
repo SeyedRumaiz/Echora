@@ -34,15 +34,14 @@ import type {
   UserProfile
 } from '../types';
 
-// Default config from firebase-applet-config.json
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  projectId: "ethereal-symbol-rcjpc",
-  appId: "1:1063767279855:web:50491fc1de7dd47191b31a",
-  apiKey: "AIzaSyB2Js-7ZQrGTBviI9-9g9Ic_Yd90Pi0vdE",
-  authDomain: "ethereal-symbol-rcjpc.firebaseapp.com",
-  firestoreDatabaseId: "ai-studio-reflectiq-47a0349f-7098-47a6-8f4b-a6d8652725f4",
-  storageBucket: "ethereal-symbol-rcjpc.firebasestorage.app",
-  messagingSenderId: "1063767279855"
+  apiKey: "AIzaSyDjEOSiECfU8wOX4cxwcCOrLDiDqmY0jw0",
+  authDomain: "echoraos-52fd5.firebaseapp.com",
+  projectId: "echoraos-52fd5",
+  storageBucket: "echoraos-52fd5.firebasestorage.app",
+  messagingSenderId: "741054564094",
+  appId: "1:741054564094:web:16013ffd4402650c2b87af"
 };
 
 // Initialize Firebase App
@@ -53,13 +52,7 @@ export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 // Initialize Firestore with custom database ID if provided
-let firestoreInstance: Firestore;
-try {
-  firestoreInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-} catch (e) {
-  firestoreInstance = getFirestore(app);
-}
-export const db = firestoreInstance;
+export const db = getFirestore(app);
 
 /* -------------------------------------------------------------
  * Authentication API
