@@ -466,7 +466,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
               </button>
             </div>
 
-            {analysis && (
+            {analysis ? (
               <div className="space-y-3 pt-1">
                 {analysis.takeaway && (
                   <p className="font-editorial text-base sm:text-lg text-stone-800 dark:text-stone-200 italic leading-relaxed">
@@ -488,6 +488,10 @@ export const JournalView: React.FC<JournalViewProps> = ({
                   </div>
                 )}
               </div>
+            ) : (
+              <p className="text-xs text-stone-500 dark:text-stone-400 italic pt-1">
+                No observation yet -- synthesize one to see the takeaway and questions EchoraOS draws from this entry.
+              </p>
             )}
           </div>
         </div>
