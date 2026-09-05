@@ -1,8 +1,9 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react';
 import { ArrowRight, Mail, Sun, Moon } from 'lucide-react';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail } from '../lib/firebase';
 import type { UserProfile } from '../types';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface LandingViewProps {
   onLoginSuccess: (user: UserProfile) => void;
@@ -41,6 +42,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const prefersReducedMotion = useReducedMotion();
   const heroRef = useRef<HTMLDivElement>(null);
   const beginRef = useRef<HTMLElement>(null);
+  const authDialogRef = useFocusTrap<HTMLDivElement>(authMode !== null);
+
+  // Escape closes the email/password auth modal, matching the app's other dialogs.
+  useEffect(() => {
+    if (!authMode) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setAuthMode(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [authMode]);
 
   // Mouse-reactive parallax for the ambient background layer only —
   // small, spring-smoothed, and only ever engaged on pointers that
@@ -421,10 +433,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
       {/* Auth Modal (Email/Password alternative) */}
       {authMode && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/60 backdrop-blur-xs animate-in fade-in">
+        <div
+          ref={authDialogRef}
+          tabIndex={-1}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="auth-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/60 backdrop-blur-xs animate-in fade-in"
+        >
           <div className="bg-[#FAF8F5] dark:bg-[#161413] border border-[#E8E4DC] dark:border-[#2B2724] rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between">
-              <h3 className="font-editorial text-xl font-medium text-stone-900 dark:text-stone-100">
+              <h3 id="auth-modal-title" className="font-editorial text-xl font-medium text-stone-900 dark:text-stone-100">
                 {authMode === 'signup' ? 'Create Account' : 'Sign In'}
               </h3>
               <button
