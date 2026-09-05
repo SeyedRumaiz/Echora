@@ -80,6 +80,34 @@ npm run dev
 
 It boots at `http://localhost:3000` by default. The server reads `PORT` from the environment if it's set (Cloud Run sets this automatically at deploy time), so locally you can also run `PORT=4000 npm run dev` if 3000 is taken.
 
+## Server architecture
+
+`server.ts` is a thin entrypoint: it picks Vite middleware (dev) or serves the
+built `dist/` (production), then starts listening. The actual routes live in
+`server/app.ts`, which exports a plain Express `app` with no `.listen()` call
+of its own — that's what lets the test suite below import and exercise the
+API without booting a real server or touching the network. Supporting logic
+is split out further: `server/lib/gemini.ts` (client construction and the
+grounding system prompt), `server/lib/journalContext.ts` (formatting a user's
+entries into the prompt context), and `shared/citations.ts` (parsing the
+`[[REF:id|title|date]]` citation format) — the last one is imported by both
+the server and the React client, so citation parsing can never drift between
+what the model emits and what the UI renders.
+
+## Testing
+
+```bash
+npm test
+```
+
+Runs the Vitest suite (`server/**/*.test.ts`, `shared/**/*.test.ts`) with
+Supertest for the HTTP layer. It covers request validation on all three AI
+endpoints (`/api/ai/chat`, `/api/ai/reflect`, `/api/ai/analyze-entry`) and the
+health check, Gemini client configuration handling (missing/placeholder key
+vs. a real one), journal-context formatting, and citation parsing/splitting.
+None of it calls the real Gemini API, so it runs without a `GEMINI_API_KEY`
+and without network access.
+
 ## Firestore rules
 
 ```rules
