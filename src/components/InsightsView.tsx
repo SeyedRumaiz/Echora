@@ -213,6 +213,11 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
+                {currentInsight.moodTrendObservation && (
+                  <p className="text-xs text-stone-500 dark:text-stone-400 italic pt-1">
+                    {currentInsight.moodTrendObservation}
+                  </p>
+                )}
               </div>
             ) : (
               <div className="space-y-2">
