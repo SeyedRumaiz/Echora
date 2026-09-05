@@ -144,7 +144,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] space-y-1.5">
             <div className="flex items-center gap-1.5 text-xs font-medium text-stone-900 dark:text-stone-100">
               <Database className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
@@ -172,6 +172,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
             <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
               Server binds to port 3000 host 0.0.0.0 with native readiness probe at <code className="text-[10px] font-mono bg-stone-200/60 dark:bg-stone-800 px-1 py-0.5 rounded">/api/health</code>.
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] space-y-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-stone-900 dark:text-stone-100">
+              <Quote className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
+              <span>Grounded, Cited Reflection</span>
+            </div>
+            <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+              Gemini is instructed to reason only from the entries you provide it -- never to invent people, events, or memories. Every observation carries a citation you can open back to its source entry.
             </p>
           </div>
         </div>
