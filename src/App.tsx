@@ -412,7 +412,7 @@ export default function App() {
 
   // Authenticated workspace
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-[#FAF8F5] dark:bg-[#131211] text-stone-900 dark:text-stone-100 selection:bg-[#E4DFD5]">
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#FAF8F5] dark:bg-[#131211] text-stone-900 dark:text-stone-100 selection:bg-[#E4DFD5] animate-in fade-in duration-300">
       {/* Restrained Navigation Rail (Left on desktop, header on mobile) */}
       <Sidebar
         activeTab={activeTab}
