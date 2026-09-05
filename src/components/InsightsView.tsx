@@ -490,6 +490,27 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               ))}
             </div>
           </section>
+
+          {currentInsight && currentInsight.suggestedNextSteps && currentInsight.suggestedNextSteps.length > 0 && (
+            <>
+              <hr className="border-t border-[#E8E4DC] dark:border-[#2B2724]" />
+              <section className="space-y-4">
+                <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
+                  Suggested Next Steps
+                </span>
+                <ul className="space-y-3">
+                  {currentInsight.suggestedNextSteps.map((step, idx) => (
+                    <li
+                      key={idx}
+                      className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] text-sm text-stone-700 dark:text-stone-300 leading-relaxed"
+                    >
+                      {step}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </>
+          )}
         </div>
       )}
     </div>
