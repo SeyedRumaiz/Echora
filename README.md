@@ -78,7 +78,7 @@ Then start the dev server:
 npm run dev
 ```
 
-It boots at `http://localhost:3000` (the port is fixed, not read from an env var — if something else on your machine is already using 3000, free it up first rather than expecting a different port).
+It boots at `http://localhost:3000` by default. The server reads `PORT` from the environment if it's set (Cloud Run sets this automatically at deploy time), so locally you can also run `PORT=4000 npm run dev` if 3000 is taken.
 
 ## Firestore rules
 
