@@ -49,9 +49,13 @@ export const TodayView: React.FC<TodayViewProps> = ({
   const safeEntries = Array.isArray(entries) ? entries : [];
   const recentEntries = safeEntries.slice(0, 3);
 
-  // Dynamic thread worth exploring
-  let threadObservation = "You've returned to questions about your pacing and commitments in recent entries.";
-  let threadPrompt = "What have I been struggling with regarding my pacing and commitments recently?";
+  // "A Thread Worth Exploring" only ever shows something EchoraOS actually
+  // derived from this user's own data (a saved longitudinal synthesis, or
+  // an AI observation captured on a recent entry) — never a placeholder
+  // dressed up to look like a real finding. If neither exists yet, the
+  // section says so honestly instead of guessing.
+  let threadObservation: string | null = null;
+  let threadPrompt = '';
 
   if (latestInsight?.summary) {
     threadObservation = latestInsight.summary;
@@ -191,11 +195,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
           A Thread Worth Exploring
         </h2>
 
-        {safeEntries.length === 0 ? (
-          <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
-            As you write, EchoraOS observes recurring thoughts, questions, and patterns across your entries.
-          </p>
-        ) : (
+        {threadObservation ? (
           <div className="space-y-3">
             <p className="font-editorial text-lg sm:text-xl text-stone-800 dark:text-stone-200 italic leading-relaxed">
               "{threadObservation}"
@@ -210,6 +210,22 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
+          </div>
+        ) : safeEntries.length === 0 ? (
+          <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+            As you write, EchoraOS observes recurring thoughts, questions, and patterns across your entries.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+              Nothing synthesized yet — EchoraOS only surfaces a thread here once it has drawn one from your own writing.
+            </p>
+            <button
+              onClick={() => onNavigate('insights')}
+              className="text-sm font-medium text-stone-900 dark:text-stone-100 underline underline-offset-4 hover:opacity-80"
+            >
+              Generate a synthesis in Insights →
+            </button>
           </div>
         )}
       </section>
