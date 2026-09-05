@@ -178,32 +178,45 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
       <div className="flex-1 overflow-y-auto space-y-8 pr-2">
         {(!messages || messages.length === 0) ? (
           <div className="py-12 space-y-8 animate-in fade-in duration-300">
-            <div className="space-y-2">
-              <p className="font-editorial text-2xl text-stone-800 dark:text-stone-200">
-                Talk to your own history.
-              </p>
-              <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-lg">
-                Ask about what you've written, patterns over time, shifts in mood, or specific decisions you've weighed. EchoraOS cites exact entries from your archive.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
-                Suggested inquiries
-              </span>
+            {(entries || []).length === 0 ? (
               <div className="space-y-2">
-                {starterPrompts.map((prompt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSend(prompt)}
-                    className="w-full text-left p-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] text-sm text-stone-700 dark:text-stone-300 transition-colors flex items-center justify-between group"
-                  >
-                    <span>"{prompt}"</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-2" />
-                  </button>
-                ))}
+                <p className="font-editorial text-2xl text-stone-800 dark:text-stone-200">
+                  Nothing to reflect on yet.
+                </p>
+                <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-lg">
+                  EchoraOS grounds every reflection in your own journal entries — write your first entry, and this space will have something real to draw from.
+                </p>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <p className="font-editorial text-2xl text-stone-800 dark:text-stone-200">
+                    Talk to your own history.
+                  </p>
+                  <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-lg">
+                    Ask about what you've written, patterns over time, shifts in mood, or specific decisions you've weighed. EchoraOS cites exact entries from your archive.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
+                    Suggested inquiries
+                  </span>
+                  <div className="space-y-2">
+                    {starterPrompts.map((prompt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSend(prompt)}
+                        className="w-full text-left p-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] text-sm text-stone-700 dark:text-stone-300 transition-colors flex items-center justify-between group"
+                      >
+                        <span>"{prompt}"</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-2" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           messages.map((msg) => {
