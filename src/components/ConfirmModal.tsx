@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
 interface ConfirmModalProps {
@@ -22,6 +22,15 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onCancel
 }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onCancel]);
+
   if (!isOpen) return null;
 
   return (
@@ -29,6 +38,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="confirm-modal-title"
+      aria-describedby="confirm-modal-message"
     >
       <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl max-w-md w-full p-6 shadow-2xl">
         <div className="flex items-start gap-4">
@@ -38,10 +49,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             </div>
           )}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-stone-900 dark:text-stone-100">
+            <h3 id="confirm-modal-title" className="text-lg font-semibold text-stone-900 dark:text-stone-100">
               {title}
             </h3>
-            <p className="text-sm text-stone-600 dark:text-stone-400 mt-2 leading-relaxed">
+            <p id="confirm-modal-message" className="text-sm text-stone-600 dark:text-stone-400 mt-2 leading-relaxed">
               {message}
             </p>
           </div>

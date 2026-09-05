@@ -56,7 +56,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Authenticated Identity */}
       <section className="space-y-3">
-        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
           Identity & Tenant Isolation
         </span>
         <div className="p-4 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent flex items-center justify-between flex-wrap gap-4">
@@ -77,10 +77,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <div className="text-sm font-medium text-stone-900 dark:text-stone-100">
                 {user.displayName || 'EchoraOS User'}
               </div>
-              <div className="text-xs text-stone-400 font-mono">
+              <div className="text-xs text-stone-600 dark:text-stone-400 font-mono">
                 {user.isDemo ? 'Showcase guest account' : user.email}
               </div>
-              <div className="text-[10px] text-stone-400 font-mono mt-0.5">
+              <div className="text-[10px] text-stone-600 dark:text-stone-400 font-mono mt-0.5">
                 UID: {user.uid}
               </div>
             </div>
@@ -95,7 +95,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Appearance */}
       <section className="space-y-3">
-        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
           Appearance
         </span>
         <div className="p-4 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent flex items-center justify-between">
@@ -130,7 +130,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Google Cloud Enterprise Architecture */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+          <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
             Google Cloud Architecture
           </span>
           <button
@@ -146,7 +146,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] space-y-1.5">
             <div className="flex items-center gap-1.5 text-xs font-medium text-stone-900 dark:text-stone-100">
-              <Database className="w-3.5 h-3.5 text-stone-500" />
+              <Database className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
               <span>User Scoped Firestore</span>
             </div>
             <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
@@ -156,7 +156,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <div className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] space-y-1.5">
             <div className="flex items-center gap-1.5 text-xs font-medium text-stone-900 dark:text-stone-100">
-              <Key className="w-3.5 h-3.5 text-stone-500" />
+              <Key className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
               <span>Secret Manager</span>
             </div>
             <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
@@ -166,7 +166,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
           <div className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] space-y-1.5">
             <div className="flex items-center gap-1.5 text-xs font-medium text-stone-900 dark:text-stone-100">
-              <Server className="w-3.5 h-3.5 text-stone-500" />
+              <Server className="w-3.5 h-3.5 text-stone-500 dark:text-stone-400" />
               <span>Cloud Run Container</span>
             </div>
             <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
@@ -177,7 +177,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         {showArchitectureCode && (
           <div className="p-4 rounded-xl bg-stone-900 text-stone-100 font-mono text-xs overflow-x-auto border border-stone-800 space-y-1">
-            <div className="text-stone-400">// firestore.rules (Active & Deployed)</div>
+            <div className="text-stone-600 dark:text-stone-400">// firestore.rules (Active & Deployed)</div>
             <pre className="text-[11px] leading-relaxed">{`rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -196,7 +196,7 @@ service cloud.firestore {
 
       {/* Data Sovereignty & Actions */}
       <section className="space-y-3">
-        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+        <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
           Data Ownership & Actions
         </span>
 

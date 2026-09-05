@@ -12,6 +12,7 @@ import type { JournalEntry, LongitudinalInsight, UserProfile, ActiveTab } from '
 interface TodayViewProps {
   user: UserProfile;
   entries: JournalEntry[];
+  isLoadingData?: boolean;
   latestInsight: LongitudinalInsight | null;
   onNavigate: (tab: ActiveTab) => void;
   onSelectEntry: (entry: JournalEntry) => void;
@@ -22,6 +23,7 @@ interface TodayViewProps {
 export const TodayView: React.FC<TodayViewProps> = ({
   user,
   entries,
+  isLoadingData = false,
   latestInsight,
   onNavigate,
   onSelectEntry,
@@ -66,7 +68,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
     <div className="max-w-2xl mx-auto py-6 sm:py-10 space-y-12 animate-in fade-in duration-300">
       {/* Top Identity & Date */}
       <section className="space-y-4">
-        <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-stone-400">
+        <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
           <span>EchoraOS</span>
           <span>·</span>
           <span>{dateFormatted}</span>
@@ -100,7 +102,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
       {/* RECENTLY */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+          <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
             Recently
           </h2>
           {safeEntries.length > 0 && (
@@ -113,7 +115,17 @@ export const TodayView: React.FC<TodayViewProps> = ({
           )}
         </div>
 
-        {safeEntries.length === 0 ? (
+        {isLoadingData ? (
+          <div className="space-y-5 py-1" aria-hidden="true">
+            {[0, 1].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="echora-skeleton h-5 w-1/2" />
+                <div className="echora-skeleton h-3.5 w-full" />
+                <div className="echora-skeleton h-3.5 w-2/3" />
+              </div>
+            ))}
+          </div>
+        ) : safeEntries.length === 0 ? (
           <div className="py-6 space-y-2">
             <p className="font-editorial text-xl text-stone-800 dark:text-stone-200">
               Your story starts here.
@@ -141,14 +153,22 @@ export const TodayView: React.FC<TodayViewProps> = ({
                 <div
                   key={entry.id}
                   id={`today-recent-entry-${entry.id}`}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => onSelectEntry(entry)}
-                  className="pt-4 first:pt-0 group cursor-pointer"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelectEntry(entry);
+                    }
+                  }}
+                  className="pt-4 first:pt-0 group cursor-pointer rounded-md"
                 >
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-editorial text-lg sm:text-xl font-medium text-stone-900 dark:text-stone-100 group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors">
                       {entry.title || 'Untitled Entry'}
                     </h3>
-                    <span className="text-xs text-stone-400 shrink-0 font-mono">
+                    <span className="text-xs text-stone-600 dark:text-stone-400 shrink-0 font-mono">
                       {dateStr}
                     </span>
                   </div>
@@ -167,7 +187,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
 
       {/* A THREAD WORTH EXPLORING */}
       <section className="space-y-3">
-        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
           A Thread Worth Exploring
         </h2>
 
@@ -199,7 +219,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
 
       {/* REFLECTION PROMPT */}
       <section className="space-y-3">
-        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+        <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
           Reflection Prompt
         </h2>
         <p className="font-editorial text-lg sm:text-xl text-stone-900 dark:text-stone-100 leading-relaxed">

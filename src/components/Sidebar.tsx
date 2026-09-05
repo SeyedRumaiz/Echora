@@ -117,11 +117,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className="w-5 h-5 text-stone-500" />
+                      <Icon className="w-5 h-5 text-stone-500 dark:text-stone-400" />
                       <span>{item.label}</span>
                     </div>
                     {typeof item.count === 'number' && item.count > 0 && (
-                      <span className="text-xs text-stone-400 font-normal">
+                      <span className="text-xs text-stone-600 dark:text-stone-400 font-normal">
                         {item.count}
                       </span>
                     )}
@@ -133,13 +133,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {/* Recent in Mobile Drawer */}
             {recentEntries.length > 0 && (
               <div className="pt-4 border-t border-[#E8E4DC] dark:border-[#2B2724] space-y-2">
-                <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 px-3.5">
+                <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 px-3.5">
                   Recent
                 </span>
                 <div className="space-y-1">
                   {recentEntries.map((entry) => (
                     <button
                       key={entry.id}
+                      title={entry.title || 'Untitled'}
                       onClick={() => {
                         onSelectEntry(entry);
                         setMobileMenuOpen(false);
@@ -182,13 +183,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div className="text-sm font-medium text-stone-900 dark:text-stone-100">
                     {user.displayName || 'User'}
                   </div>
-                  <div className="text-xs text-stone-400 truncate max-w-[180px]">
+                  <div className="text-xs text-stone-600 dark:text-stone-400 truncate max-w-[180px]" title={user.email || undefined}>
                     {user.email}
                   </div>
                 </div>
                 <button
                   onClick={onSignOut}
-                  className="p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
+                  className="p-2 text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200"
                   aria-label="Sign out"
                 >
                   <LogOut className="w-4 h-4" />
@@ -246,11 +247,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className={`w-4 h-4 ${active ? 'text-stone-900 dark:text-stone-100' : 'text-stone-400'}`} />
+                  <Icon className={`w-4 h-4 ${active ? 'text-stone-900 dark:text-stone-100' : 'text-stone-600 dark:text-stone-400'}`} />
                   <span>{item.label}</span>
                 </div>
                 {typeof item.count === 'number' && item.count > 0 && (
-                  <span className="text-xs text-stone-400 font-normal">
+                  <span className="text-xs text-stone-600 dark:text-stone-400 font-normal">
                     {item.count}
                   </span>
                 )}
@@ -263,12 +264,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {recentEntries.length > 0 && (
           <div className="mb-auto space-y-2 px-1">
             <div className="flex items-center justify-between px-2">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                 Recent
               </span>
               <button
                 onClick={() => setActiveTab('journal')}
-                className="text-[11px] text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+                className="text-[11px] text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
               >
                 View all
               </button>
@@ -286,8 +287,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => onSelectEntry(entry)}
                     className="w-full text-left px-2.5 py-2 rounded-md text-xs text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] transition-colors flex items-center justify-between group"
                   >
-                    <span className="truncate pr-2">{entry.title || 'Untitled'}</span>
-                    <span className="text-[10px] text-stone-400 shrink-0 group-hover:text-stone-500">
+                    <span className="truncate pr-2" title={entry.title || 'Untitled'}>{entry.title || 'Untitled'}</span>
+                    <span className="text-[10px] text-stone-600 dark:text-stone-400 shrink-0 group-hover:text-stone-500">
                       {dateStr}
                     </span>
                   </button>
@@ -308,7 +309,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817]'
             }`}
           >
-            <Settings className="w-4 h-4 text-stone-400" />
+            <Settings className="w-4 h-4 text-stone-600 dark:text-stone-400" />
             <span>Settings</span>
           </button>
 
@@ -318,7 +319,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] transition-colors"
           >
             <div className="flex items-center gap-2.5">
-              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-stone-400" />}
+              {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-stone-600 dark:text-stone-400" />}
               <span>{darkMode ? 'Light Theme' : 'Dark Theme'}</span>
             </div>
           </button>
@@ -339,10 +340,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <div className="text-xs font-semibold text-stone-900 dark:text-stone-100 truncate">
+                  <div className="text-xs font-semibold text-stone-900 dark:text-stone-100 truncate" title={user.displayName || 'User'}>
                     {user.displayName || 'User'}
                   </div>
-                  <div className="text-[10px] text-stone-400 truncate">
+                  <div className="text-[10px] text-stone-600 dark:text-stone-400 truncate" title={user.isDemo ? 'Showcase mode' : (user.email || undefined)}>
                     {user.isDemo ? 'Showcase mode' : user.email}
                   </div>
                 </div>
@@ -351,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 id="sidebar-sign-out-btn"
                 onClick={onSignOut}
-                className="p-1.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-md transition-colors"
+                className="p-1.5 text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-md transition-colors"
                 title="Sign out"
                 aria-label="Sign out"
               >

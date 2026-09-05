@@ -63,6 +63,11 @@ export default function App() {
 
   const [insights, setInsights] = useState<LongitudinalInsight[]>([]);
 
+  // True while the initial Firestore fetch for the signed-in user is in
+  // flight, so views can show a loading placeholder instead of briefly
+  // flashing "no entries yet" ahead of a returning user's real archive.
+  const [dataLoading, setDataLoading] = useState(false);
+
   // Dialog & Modal State
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
   const [confirmModal, setConfirmModal] = useState<{
@@ -139,9 +144,11 @@ export default function App() {
       setConversations([]);
       setMessages([]);
       setInsights([]);
+      setDataLoading(false);
       return;
     }
 
+    setDataLoading(true);
     const loadData = async () => {
       try {
         // Load journal entries
@@ -170,6 +177,8 @@ export default function App() {
       } catch (err: any) {
         console.error('Error initializing user data:', err);
         showToast('Could not load existing reflections.', 'error');
+      } finally {
+        setDataLoading(false);
       }
     };
 
@@ -378,7 +387,7 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] dark:bg-[#131211] text-stone-700 dark:text-stone-300">
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-stone-300 dark:border-stone-700 border-t-stone-900 dark:border-t-stone-100 rounded-full animate-spin mx-auto" />
-          <p className="font-editorial text-sm tracking-wide text-stone-500">
+          <p className="font-editorial text-sm tracking-wide text-stone-500 dark:text-stone-400">
             Initializing EchoraOS...
           </p>
         </div>
@@ -429,6 +438,7 @@ export default function App() {
           <TodayView
             user={user}
             entries={entries}
+            isLoadingData={dataLoading}
             latestInsight={insights.length > 0 ? insights[0] : null}
             onNavigate={setActiveTab}
             onSelectEntry={(entry) => {
@@ -446,6 +456,7 @@ export default function App() {
         {activeTab === 'journal' && (
           <JournalView
             entries={entries}
+            isLoadingData={dataLoading}
             selectedEntry={selectedEntry}
             onSelectEntry={setSelectedEntry}
             onSaveEntry={handleSaveEntry}
@@ -479,6 +490,7 @@ export default function App() {
           <InsightsView
             user={user}
             entries={entries}
+            isLoadingData={dataLoading}
             insights={insights}
             onSaveInsight={handleSaveInsight}
             onShowToast={showToast}

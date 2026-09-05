@@ -112,7 +112,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {/* Main Editorial Hero */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-6 pt-12 pb-24 flex flex-col items-center text-center space-y-10">
         {/* Ideathon quiet marker */}
-        <div className="inline-flex items-center gap-2 text-xs text-stone-400 font-mono tracking-wide">
+        <div className="inline-flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400 font-mono tracking-wide">
           <span>Google Cloud Gen AI Academy APAC Ideathon</span>
         </div>
 
@@ -177,7 +177,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
         {/* Editorial Preview: Talk to your history */}
         <div className="w-full max-w-2xl text-left pt-12 space-y-4 border-t border-[#E8E4DC] dark:border-[#2B2724]">
-          <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+          <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
             The Reflection Experience
           </span>
 
@@ -189,14 +189,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
 
             <div className="space-y-3 max-w-lg">
-              <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+              <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                 EchoraOS
               </div>
               <p className="text-sm sm:text-base text-stone-800 dark:text-stone-200 leading-relaxed font-normal">
                 Across three recent entries, you have returned to questions about taking on too many commitments and context-switching without recovery time.
               </p>
               <div className="pt-2 border-t border-[#F0EDE6] dark:border-[#201E1C] space-y-1">
-                <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-400 block">
+                <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
                   Sources
                 </span>
                 <div className="text-xs text-stone-600 dark:text-stone-400 space-y-0.5 font-normal">
@@ -250,7 +250,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <button
                 id="close-auth-modal"
                 onClick={() => setAuthMode(null)}
-                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 text-xs"
+                className="text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 text-xs"
               >
                 Cancel
               </button>
@@ -258,7 +258,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
             <form onSubmit={handleEmailAuth} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-semibold text-stone-500 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-1">
                   Email
                 </label>
                 <input
@@ -273,7 +273,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-stone-500 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-1">
                   Password
                 </label>
                 <input
@@ -319,7 +319,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#E8E4DC] dark:border-[#2B2724] py-8 text-center text-xs text-stone-400">
+      <footer className="border-t border-[#E8E4DC] dark:border-[#2B2724] py-8 text-center text-xs text-stone-600 dark:text-stone-400">
         <p>EchoraOS · Private AI-Powered Reflection System</p>
         <p className="mt-1">Built with Gemini 2.5 Flash, Cloud Firestore & Google Cloud Run</p>
       </footer>

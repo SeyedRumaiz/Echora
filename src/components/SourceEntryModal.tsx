@@ -33,15 +33,16 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/60 backdrop-blur-xs animate-in fade-in"
       role="dialog"
       aria-modal="true"
+      aria-labelledby="source-entry-modal-title"
     >
       <div className="bg-[#FAF8F5] dark:bg-[#161413] border border-[#E8E4DC] dark:border-[#2B2724] rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-xl overflow-hidden animate-in zoom-in-95 duration-150">
         {/* Editorial Top Bar */}
         <div className="px-6 py-5 border-b border-[#E8E4DC] dark:border-[#2B2724] flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-400 block">
+            <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
               Source Entry · Private Archive
             </span>
-            <h2 className="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 dark:text-stone-100 leading-tight">
+            <h2 id="source-entry-modal-title" className="font-editorial text-2xl sm:text-3xl font-medium text-stone-900 dark:text-stone-100 leading-tight">
               {entry.title || 'Untitled Entry'}
             </h2>
             <div className="flex items-center gap-2 text-xs text-stone-500 dark:text-stone-400 pt-0.5">
@@ -60,7 +61,7 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
           <button
             id="close-source-entry-modal"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+            className="p-1.5 rounded-lg text-stone-600 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -90,7 +91,7 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
           {/* Takeaway if captured */}
           {entry.aiMetadata?.takeaway && (
             <div className="pt-2">
-              <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-400 block mb-1">
+              <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block mb-1">
                 Captured Observation
               </span>
               <p className="font-editorial text-base text-stone-700 dark:text-stone-300 italic leading-relaxed">
@@ -101,7 +102,7 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#E8E4DC] dark:border-[#2B2724] bg-[#F5F2EC]/60 dark:bg-[#131211]/60 flex items-center justify-between text-xs text-stone-400">
+        <div className="px-6 py-4 border-t border-[#E8E4DC] dark:border-[#2B2724] bg-[#F5F2EC]/60 dark:bg-[#131211]/60 flex items-center justify-between text-xs text-stone-600 dark:text-stone-400">
           <span>Grounded citation for EchoraOS reflection.</span>
           <button
             id="done-source-entry-modal"

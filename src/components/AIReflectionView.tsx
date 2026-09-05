@@ -183,10 +183,10 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
       <div className="pb-4 mb-4 border-b border-[#E8E4DC] dark:border-[#2B2724] flex items-baseline justify-between shrink-0">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
               Reflect
             </span>
-            <span className="text-xs text-stone-400">·</span>
+            <span className="text-xs text-stone-600 dark:text-stone-400">·</span>
             <span className="text-xs text-stone-500 dark:text-stone-400">
               Grounded in {(entries || []).length} {(entries || []).length === 1 ? 'entry' : 'entries'}
             </span>
@@ -220,7 +220,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
             </div>
 
             <div className="space-y-2">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
                 Suggested inquiries
               </span>
               <div className="space-y-2">
@@ -231,7 +231,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                     className="w-full text-left p-3 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] bg-transparent hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] text-sm text-stone-700 dark:text-stone-300 transition-colors flex items-center justify-between group"
                   >
                     <span>"{prompt}"</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-2" />
+                    <ArrowUpRight className="w-3.5 h-3.5 text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-2" />
                   </button>
                 ))}
               </div>
@@ -256,7 +256,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                 ) : (
                   /* EchoraOS Message: Quiet, editorial layout, no giant card box */
                   <div className="space-y-4 max-w-2xl">
-                    <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+                    <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                       EchoraOS
                     </div>
 
@@ -267,7 +267,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                     {/* Sources (typographic list, not clunky badges) */}
                     {sources.length > 0 && (
                       <div className="pt-3 border-t border-[#F0EDE6] dark:border-[#201E1C] space-y-1.5">
-                        <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-400">
+                        <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                           Sources
                         </span>
                         <div className="space-y-1">
@@ -283,7 +283,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                                   }}
                                   className="text-xs text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 transition-colors flex items-center gap-1.5"
                                 >
-                                  <span className="font-mono text-[11px] text-stone-400">
+                                  <span className="font-mono text-[11px] text-stone-600 dark:text-stone-400">
                                     {s.date}
                                   </span>
                                   <span>—</span>
@@ -330,10 +330,10 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
 
         {isSending && (
           <div className="space-y-2 max-w-2xl animate-pulse">
-            <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+            <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
               EchoraOS
             </div>
-            <p className="text-sm text-stone-400 italic">
+            <p className="text-sm text-stone-600 dark:text-stone-400 italic">
               Reflecting on your journal entries...
             </p>
           </div>
@@ -357,7 +357,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
           />
 
           <div className="absolute bottom-2.5 right-2.5 flex items-center gap-2">
-            <span className="text-[10px] text-stone-400 hidden sm:inline">
+            <span className="text-[10px] text-stone-600 dark:text-stone-400 hidden sm:inline">
               Return to send
             </span>
             <button
@@ -373,7 +373,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
         </div>
 
         <div className="pt-2 text-center">
-          <span className="text-[11px] text-stone-400">
+          <span className="text-[11px] text-stone-600 dark:text-stone-400">
             EchoraOS reflects exclusively on your private entries. Raw thoughts are never exposed.
           </span>
         </div>

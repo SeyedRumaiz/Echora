@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Tailwind v4 defaults dark: to the OS prefers-color-scheme media query.
+   This app drives dark mode with its own .dark class (toggle + localStorage),
+   so opt every dark: utility into that class instead — otherwise dark:*
+   utilities silently follow the system theme and ignore the in-app toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --bg-main: #faf8f5;
@@ -61,3 +67,77 @@
   background: rgba(168, 162, 158, 0.45);
 }
 
+
+/* ==================================================================
+   UI/UX polish pass (visual only — no functional/behavioral changes)
+   ================================================================== */
+
+/* ---- Entrance transitions -----------------------------------------
+   The JSX throughout the app already uses `animate-in fade-in
+   zoom-in-95 duration-*` (from the common shadcn/tailwindcss-animate
+   convention), but that plugin isn't installed, so these classes were
+   silent no-ops. Implementing them directly gives every view switch
+   and modal the intended soft entrance instead of an instant pop-in.
+--------------------------------------------------------------------- */
+@keyframes echora-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes echora-zoom-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-in { animation-fill-mode: both; animation-timing-function: ease-out; animation-duration: 220ms; }
+.animate-in.fade-in { animation-name: echora-fade-in; }
+.animate-in.zoom-in-95 { animation-name: echora-zoom-in; }
+.animate-in.duration-150 { animation-duration: 150ms; }
+.animate-in.duration-200 { animation-duration: 200ms; }
+.animate-in.duration-300 { animation-duration: 300ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in { animation: none !important; }
+}
+
+/* ---- Keyboard focus -------------------------------------------------
+   No visible focus style existed anywhere in the app; keyboard users
+   fell back to the raw browser outline, and a few inputs even
+   suppress it via outline-none with no replacement. This restores a
+   single, on-brand focus ring everywhere (mouse clicks are unaffected
+   since :focus-visible only engages for keyboard/assistive input).
+--------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* ---- Loading skeletons -----------------------------------------------
+   Quiet placeholder used while the first Firestore fetch for a signed
+   -in user is still in flight, so "no entries yet" copy never flashes
+   ahead of a returning user's real archive loading in.
+--------------------------------------------------------------------- */
+.echora-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--border-subtle);
+  border-radius: 6px;
+}
+.echora-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: echora-shimmer 1.6s ease-in-out infinite;
+}
+.dark .echora-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+}
+@keyframes echora-shimmer {
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .echora-skeleton::after { animation: none; }
+}

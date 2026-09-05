@@ -18,6 +18,7 @@ import { generateLongitudinalInsight } from '../services/aiService';
 interface InsightsViewProps {
   user: UserProfile;
   entries: JournalEntry[];
+  isLoadingData?: boolean;
   insights: LongitudinalInsight[];
   onSaveInsight: (insight: LongitudinalInsight) => Promise<void>;
   onShowToast: (msg: string, type: 'success' | 'error' | 'info') => void;
@@ -31,6 +32,7 @@ type Timeframe = '7days' | '14days' | '30days' | 'all';
 export const InsightsView: React.FC<InsightsViewProps> = ({
   user,
   entries,
+  isLoadingData = false,
   insights,
   onSaveInsight,
   onShowToast,
@@ -127,7 +129,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
         </div>
 
         {/* Timeframe selector */}
-        <div className="flex items-center gap-1 text-xs text-stone-500">
+        <div className="flex items-center gap-1 text-xs text-stone-500 dark:text-stone-400">
           {(
             [
               { id: '7days', label: '7 Days' },
@@ -151,7 +153,13 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
         </div>
       </div>
 
-      {entries.length === 0 ? (
+      {isLoadingData && entries.length === 0 ? (
+        <div className="space-y-4 py-6" aria-hidden="true">
+          <div className="echora-skeleton h-7 w-2/3" />
+          <div className="echora-skeleton h-4 w-full" />
+          <div className="echora-skeleton h-4 w-5/6" />
+        </div>
+      ) : entries.length === 0 ? (
         <div className="py-16 text-center space-y-3">
           <p className="font-editorial text-2xl text-stone-800 dark:text-stone-200">
             Your patterns will appear here as you write.
@@ -173,7 +181,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
           {/* Executive Synthesis / Observation */}
           <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                 Synthesis
               </span>
               <button
@@ -226,7 +234,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
 
           {/* RECURRING THREADS */}
           <section className="space-y-4">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
               Recurring Threads
             </span>
 
@@ -245,7 +253,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
                       <h3 className="font-editorial text-lg font-medium text-stone-900 dark:text-stone-100">
                         {theme.name}
                       </h3>
-                      <span className="text-xs text-stone-400 font-mono">
+                      <span className="text-xs text-stone-600 dark:text-stone-400 font-mono">
                         {theme.count} {theme.count === 1 ? 'entry' : 'entries'}
                       </span>
                     </div>
@@ -275,7 +283,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
 
           {/* MOMENTS WORTH REMEMBERING */}
           <section className="space-y-4">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
               Moments Worth Remembering
             </span>
 
@@ -294,14 +302,22 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
                   return (
                     <div
                       key={entry.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onOpenSourceEntry(entry)}
-                      className="pt-4 first:pt-0 group cursor-pointer space-y-1"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onOpenSourceEntry(entry);
+                        }
+                      }}
+                      className="pt-4 first:pt-0 group cursor-pointer space-y-1 rounded-md"
                     >
                       <div className="flex items-baseline justify-between gap-3">
                         <h3 className="font-editorial text-base sm:text-lg font-medium text-stone-900 dark:text-stone-100 group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors">
                           "{entry.title || 'Untitled Entry'}"
                         </h3>
-                        <span className="text-xs text-stone-400 font-mono shrink-0">
+                        <span className="text-xs text-stone-600 dark:text-stone-400 font-mono shrink-0">
                           {dateStr}
                         </span>
                       </div>
@@ -319,7 +335,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
 
           {/* QUESTIONS TO CARRY FORWARD */}
           <section className="space-y-4">
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 block">
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
               Questions to Carry Forward
             </span>
 
@@ -336,13 +352,21 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               ).map((q, idx) => (
                 <div
                   key={idx}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => onStartReflectWithPrompt(q)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onStartReflectWithPrompt(q);
+                    }
+                  }}
                   className="p-3.5 rounded-xl border border-[#E8E4DC] dark:border-[#2B2724] hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] cursor-pointer transition-colors flex items-center justify-between group"
                 >
                   <p className="font-editorial text-base text-stone-800 dark:text-stone-200">
                     "{q}"
                   </p>
-                  <ArrowRight className="w-3.5 h-3.5 text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-3" />
+                  <ArrowRight className="w-3.5 h-3.5 text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors shrink-0 ml-3" />
                 </div>
               ))}
             </div>

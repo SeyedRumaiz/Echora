@@ -15,6 +15,7 @@ import { analyzeSingleEntry } from '../services/aiService';
 
 interface JournalViewProps {
   entries: JournalEntry[];
+  isLoadingData?: boolean;
   selectedEntry: JournalEntry | null;
   onSelectEntry: (entry: JournalEntry | null) => void;
   onSaveEntry: (entryData: Partial<JournalEntry>) => Promise<JournalEntry>;
@@ -36,6 +37,7 @@ const ALL_MOODS: MoodType[] = [
 
 export const JournalView: React.FC<JournalViewProps> = ({
   entries,
+  isLoadingData = false,
   selectedEntry,
   onSelectEntry,
   onSaveEntry,
@@ -285,11 +287,11 @@ export const JournalView: React.FC<JournalViewProps> = ({
 
           <div className="flex items-center gap-4">
             {/* Unobtrusive save status */}
-            <span className="text-stone-400 flex items-center gap-1">
+            <span className="text-stone-600 dark:text-stone-400 flex items-center gap-1">
               {saveStatus === 'saving' && <span>Saving...</span>}
               {saveStatus === 'saved' && (
                 <>
-                  <Check className="w-3 h-3 text-stone-400" />
+                  <Check className="w-3 h-3 text-stone-600 dark:text-stone-400" />
                   <span>Saved</span>
                 </>
               )}
@@ -321,7 +323,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
                     }
                   );
                 }}
-                className="p-1 text-stone-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                className="p-1 text-stone-600 dark:text-stone-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 title="Delete entry"
                 aria-label="Delete entry"
               >
@@ -344,7 +346,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
           />
 
           {/* Metadata Row */}
-          <div className="flex items-center gap-4 text-xs text-stone-400 flex-wrap pb-2 border-b border-[#F0EDE6] dark:border-[#1E1C1A]">
+          <div className="flex items-center gap-4 text-xs text-stone-600 dark:text-stone-400 flex-wrap pb-2 border-b border-[#F0EDE6] dark:border-[#1E1C1A]">
             <span>{formattedDate}</span>
             <span>·</span>
             <span>{wordCount} words</span>
@@ -405,7 +407,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
             ) : (
               <button
                 onClick={() => setShowTagInput(true)}
-                className="text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+                className="text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
               >
                 + tag
               </button>
@@ -424,7 +426,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
           {/* Observation Section (Quiet, not card-cluttered) */}
           <div className="pt-8 border-t border-[#E8E4DC] dark:border-[#2B2724] space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
+              <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
                 Observation
               </span>
               <button
@@ -448,11 +450,11 @@ export const JournalView: React.FC<JournalViewProps> = ({
 
                 {analysis.reflectionQuestions && analysis.reflectionQuestions.length > 0 && (
                   <div className="space-y-1.5 pt-2">
-                    <span className="text-xs text-stone-400 block">Questions to consider:</span>
+                    <span className="text-xs text-stone-600 dark:text-stone-400 block">Questions to consider:</span>
                     <ul className="space-y-1 text-sm text-stone-600 dark:text-stone-400">
                       {analysis.reflectionQuestions.map((q, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <span className="text-stone-400">•</span>
+                          <span className="text-stone-600 dark:text-stone-400">•</span>
                           <span>{q}</span>
                         </li>
                       ))}
@@ -498,7 +500,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
       {/* Subtle Search & Mood Filter */}
       <div className="flex items-center justify-between gap-4 flex-wrap pb-2">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-stone-600 dark:text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             id="journal-search-input"
             type="text"
@@ -510,7 +512,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
         </div>
 
         {/* Subtle Mood Filter */}
-        <div className="flex items-center gap-1.5 text-xs text-stone-500 overflow-x-auto">
+        <div className="flex items-center gap-1.5 text-xs text-stone-500 dark:text-stone-400 overflow-x-auto">
           <button
             onClick={() => setSelectedMoodFilter('all')}
             className={`px-2.5 py-1 rounded-md transition-colors ${
@@ -538,7 +540,19 @@ export const JournalView: React.FC<JournalViewProps> = ({
       </div>
 
       {/* Timeline Content */}
-      {groupedTimeline.length === 0 ? (
+      {isLoadingData && groupedTimeline.length === 0 ? (
+        <div className="space-y-8 py-2" aria-hidden="true">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-start gap-4 sm:gap-6 py-2">
+              <div className="echora-skeleton h-4 w-6 shrink-0" />
+              <div className="flex-1 space-y-2">
+                <div className="echora-skeleton h-5 w-1/3" />
+                <div className="echora-skeleton h-3.5 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : groupedTimeline.length === 0 ? (
         <div className="py-16 text-center space-y-3">
           <p className="font-editorial text-2xl text-stone-800 dark:text-stone-200">
             {searchQuery || selectedMoodFilter !== 'all' ? 'No entries match your search.' : 'Your story starts here.'}
@@ -562,7 +576,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
           {groupedTimeline.map((group) => (
             <div key={group.monthYear} className="space-y-4">
               {/* Month Header */}
-              <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-400 pt-2 border-b border-[#F0EDE6] dark:border-[#1E1C1A] pb-1">
+              <h2 className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 pt-2 border-b border-[#F0EDE6] dark:border-[#1E1C1A] pb-1">
                 {group.monthYear}
               </h2>
 
@@ -576,11 +590,19 @@ export const JournalView: React.FC<JournalViewProps> = ({
                     <article
                       key={entry.id}
                       id={`timeline-entry-${entry.id}`}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => onSelectEntry(entry)}
-                      className="flex items-start gap-4 sm:gap-6 py-2 group cursor-pointer transition-opacity hover:opacity-85"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectEntry(entry);
+                        }
+                      }}
+                      className="flex items-start gap-4 sm:gap-6 py-2 group cursor-pointer transition-opacity hover:opacity-85 rounded-md"
                     >
                       {/* Day Number */}
-                      <span className="font-mono text-sm sm:text-base font-semibold text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors w-6 shrink-0 pt-0.5">
+                      <span className="font-mono text-sm sm:text-base font-semibold text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100 transition-colors w-6 shrink-0 pt-0.5">
                         {dayNum}
                       </span>
 
@@ -591,7 +613,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
                             {entry.title || 'Untitled'}
                           </h3>
                           {entry.mood && (
-                            <span className="text-[11px] text-stone-400 font-normal shrink-0">
+                            <span className="text-[11px] text-stone-600 dark:text-stone-400 font-normal shrink-0">
                               {entry.mood}
                             </span>
                           )}
@@ -604,7 +626,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
                         {entry.tags && entry.tags.length > 0 && (
                           <div className="flex items-center gap-2 pt-1">
                             {entry.tags.slice(0, 4).map((t, idx) => (
-                              <span key={idx} className="text-[11px] text-stone-400">
+                              <span key={idx} className="text-[11px] text-stone-600 dark:text-stone-400">
                                 #{t}
                               </span>
                             ))}
