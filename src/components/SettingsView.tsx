@@ -9,7 +9,8 @@ import {
   Database,
   Moon,
   Sun,
-  Code2
+  Code2,
+  Quote
 } from 'lucide-react';
 import type { JournalEntry, UserProfile } from '../types';
 
