@@ -306,7 +306,63 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               Moments Worth Remembering
             </span>
 
-            {momentsWorthRemembering.length === 0 ? (
+            {currentInsight && currentInsight.meaningfulMoments && currentInsight.meaningfulMoments.length > 0 ? (
+              <div className="space-y-4 divide-y divide-[#F0EDE6] dark:divide-[#201E1C]">
+                {currentInsight.meaningfulMoments.map((moment, idx) => {
+                  const sourceEntry = moment.entryId
+                    ? entries.find((e) => e.id === moment.entryId)
+                    : undefined;
+
+                  const momentBody = (
+                    <>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3
+                          className={`font-editorial text-base sm:text-lg font-medium text-stone-900 dark:text-stone-100 ${
+                            sourceEntry ? 'group-hover:text-stone-600 dark:group-hover:text-stone-300 transition-colors' : ''
+                          }`}
+                        >
+                          "{moment.title}"
+                        </h3>
+                        {moment.date && (
+                          <span className="text-xs text-stone-600 dark:text-stone-400 font-mono shrink-0">
+                            {moment.date}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 line-clamp-2 leading-relaxed">
+                        {moment.description}
+                      </p>
+                    </>
+                  );
+
+                  if (!sourceEntry) {
+                    return (
+                      <div key={`${moment.title}-${idx}`} className="pt-4 first:pt-0 space-y-1">
+                        {momentBody}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={`${moment.title}-${idx}`}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => onOpenSourceEntry(sourceEntry)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onOpenSourceEntry(sourceEntry);
+                        }
+                      }}
+                      className="pt-4 first:pt-0 group cursor-pointer space-y-1 rounded-md"
+                    >
+                      {momentBody}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : momentsWorthRemembering.length === 0 ? (
               <p className="text-sm text-stone-500 dark:text-stone-400">
                 Key narrative breakthroughs and milestones will be highlighted here.
               </p>
@@ -349,6 +405,51 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               </div>
             )}
           </section>
+
+          {currentInsight &&
+            ((currentInsight.goalsAndIntentions && currentInsight.goalsAndIntentions.length > 0) ||
+              (currentInsight.challenges && currentInsight.challenges.length > 0)) && (
+              <>
+                <hr className="border-t border-[#E8E4DC] dark:border-[#2B2724]" />
+                <section className="space-y-6">
+                  {currentInsight.goalsAndIntentions && currentInsight.goalsAndIntentions.length > 0 && (
+                    <div className="space-y-3">
+                      <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
+                        Goals &amp; Intentions
+                      </span>
+                      <ul className="space-y-2">
+                        {currentInsight.goalsAndIntentions.map((item, idx) => (
+                          <li
+                            key={idx}
+                            className="text-sm text-stone-700 dark:text-stone-300 leading-relaxed pl-4 border-l-2 border-[#E8E4DC] dark:border-[#2B2724]"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {currentInsight.challenges && currentInsight.challenges.length > 0 && (
+                    <div className="space-y-3">
+                      <span className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400 block">
+                        Challenges
+                      </span>
+                      <ul className="space-y-2">
+                        {currentInsight.challenges.map((item, idx) => (
+                          <li
+                            key={idx}
+                            className="text-sm text-stone-700 dark:text-stone-300 leading-relaxed pl-4 border-l-2 border-[#E8E4DC] dark:border-[#2B2724]"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
 
           <hr className="border-t border-[#E8E4DC] dark:border-[#2B2724]" />
 
