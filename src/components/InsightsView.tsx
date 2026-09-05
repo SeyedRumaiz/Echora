@@ -243,7 +243,21 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               Recurring Threads
             </span>
 
-            {derivedThemes.length === 0 ? (
+            {currentInsight && currentInsight.themes && currentInsight.themes.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {currentInsight.themes.map((theme, idx) => (
+                  <button
+                    key={`${theme}-${idx}`}
+                    onClick={() =>
+                      onStartReflectWithPrompt(`What have I written about ${theme} across my journal entries?`)
+                    }
+                    className="px-3.5 py-2 rounded-full border border-[#E8E4DC] dark:border-[#2B2724] text-sm font-editorial text-stone-800 dark:text-stone-200 hover:bg-[#F3F0EA] dark:hover:bg-[#1A1817] transition-colors"
+                  >
+                    {theme}
+                  </button>
+                ))}
+              </div>
+            ) : derivedThemes.length === 0 ? (
               <p className="text-sm text-stone-500 dark:text-stone-400">
                 Continue journaling to reveal recurring topics and patterns over time.
               </p>
