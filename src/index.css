@@ -141,3 +141,63 @@
 @media (prefers-reduced-motion: reduce) {
   .echora-skeleton::after { animation: none; }
 }
+
+/* ==================================================================
+   Landing hero — cinematic ambience (decorative, non-blocking)
+   Every rule here is purely visual: opacity/transform only, GPU-cheap,
+   and gated behind prefers-reduced-motion so a visitor who asked for
+   less motion gets a calm, static scene instead.
+   ================================================================== */
+
+/* Slow autonomous drift on the two background glows. Parallax (mouse-
+   reactive translate) is applied separately, in React, to a *parent*
+   element — never the same element as this animation — so the two
+   transforms never fight over one inline style. */
+@keyframes echora-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(3%, -4%); }
+}
+.echora-glow-drift { }
+@media (prefers-reduced-motion: no-preference) {
+  .echora-glow-drift { animation: echora-drift 24s ease-in-out infinite; }
+}
+
+/* Concentric rings behind the wordmark, echoing outward like a
+   ripple — a literal nod to "Echora". Base opacity is 0, so with the
+   animation withheld (reduced motion) the rings simply never appear,
+   no frozen mid-animation frame to clean up. */
+@keyframes echora-ripple {
+  0% { transform: scale(0.55); opacity: 0.28; }
+  75% { opacity: 0.05; }
+  100% { transform: scale(1.85); opacity: 0; }
+}
+.echora-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid var(--accent);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .echora-ring { animation: echora-ripple 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+}
+
+/* A sparse constellation of "moments" — small dots that breathe
+   faintly. Visible but static under reduced motion. */
+@keyframes echora-twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.5; }
+}
+.echora-mote { }
+@media (prefers-reduced-motion: no-preference) {
+  .echora-mote { animation: echora-twinkle 5s ease-in-out infinite; }
+}
+
+/* "Scroll" affordance beneath the hero — only ever rendered when
+   motion is allowed (gated in JSX), this is just its own motion. */
+@keyframes echora-scroll-cue {
+  0%, 100% { transform: translateY(0); opacity: 0.35; }
+  50% { transform: translateY(6px); opacity: 0.85; }
+}
+.echora-scroll-cue { animation: echora-scroll-cue 1.8s ease-in-out infinite; }
+
