@@ -460,15 +460,14 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
             </span>
 
             <div className="space-y-3">
-              {((currentInsight?.recommendations && Array.isArray(currentInsight.recommendations) && currentInsight.recommendations.length > 0)
-                ? currentInsight.recommendations
-                : (currentInsight?.reflectionQuestions && Array.isArray(currentInsight.reflectionQuestions) && currentInsight.reflectionQuestions.length > 0)
-                ? currentInsight.reflectionQuestions
-                : [
-                    'What has been consuming your emotional energy without giving much back?',
-                    'Are there decisions you are delaying because of the uncertainty involved?',
-                    'What would a gentle, unhurried week look like for you?'
-                  ]
+              {(
+                currentInsight?.reflectionQuestions && Array.isArray(currentInsight.reflectionQuestions) && currentInsight.reflectionQuestions.length > 0
+                  ? currentInsight.reflectionQuestions
+                  : [
+                      'What has been consuming your emotional energy without giving much back?',
+                      'Are there decisions you are delaying because of the uncertainty involved?',
+                      'What would a gentle, unhurried week look like for you?'
+                    ]
               ).map((q, idx) => (
                 <div
                   key={idx}
