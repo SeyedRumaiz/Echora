@@ -67,6 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => setActiveTab('today')}
           className="flex items-center gap-2 text-left"
         >
+          <img src="/icon-192.png" alt="" className="w-6 h-6 rounded-md" />
           <span className="font-editorial text-xl font-medium tracking-tight text-stone-900 dark:text-stone-100">
             EchoraOS
           </span>
@@ -207,10 +208,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             id="brand-home-btn"
             onClick={() => setActiveTab('today')}
-            className="text-left group block"
+            className="text-left group block w-full"
           >
-            <span className="font-editorial text-2xl font-medium tracking-tight text-stone-900 dark:text-stone-100 block group-hover:opacity-80 transition-opacity">
-              EchoraOS
+            <span className="flex items-center gap-2 group-hover:opacity-80 transition-opacity">
+              <img src="/icon-192.png" alt="" className="w-7 h-7 rounded-md shrink-0" />
+              <span className="font-editorial text-2xl font-medium tracking-tight text-stone-900 dark:text-stone-100">
+                EchoraOS
+              </span>
             </span>
             <span className="text-[12px] text-stone-500 dark:text-stone-400 tracking-normal block mt-0.5 font-light">
               Your story, understood over time.
