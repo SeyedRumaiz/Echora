@@ -232,6 +232,7 @@ Roughly what's working as of this writing:
 - `GEMINI_API_KEY` is only ever read server-side
 - Full JSON export and a real delete-everything flow, per the privacy section above
 - `/api/health` for Cloud Run's readiness and liveness checks
+- A Vitest + Supertest suite covering the AI endpoints, Gemini client config, journal-context formatting, and citation parsing (`npm test`)
 
 ## License
 
