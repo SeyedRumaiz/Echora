@@ -310,7 +310,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
         )}
 
         {isSending && (
-          <div className="space-y-2 max-w-2xl animate-pulse">
+          <div className="space-y-2 max-w-2xl animate-pulse" role="status" aria-live="polite">
             <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-600 dark:text-stone-400">
               EchoraOS
             </div>
