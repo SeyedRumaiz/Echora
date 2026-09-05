@@ -417,7 +417,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
             id="editor-content-textarea"
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
-            placeholder="Write your thoughts freely. ECHORA will help you understand their shape over time..."
+            placeholder="Write your thoughts freely. EchoraOS will help you understand their shape over time..."
             className="w-full text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-200 placeholder:text-stone-400/50 bg-transparent border-0 outline-none p-0 resize-none min-h-[360px]"
           />
 
@@ -546,7 +546,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
           <p className="text-sm text-stone-500 dark:text-stone-400 max-w-sm mx-auto leading-relaxed">
             {searchQuery || selectedMoodFilter !== 'all'
               ? 'Try clearing your filters or search terms.'
-              : 'Write something today. ECHORA will help you understand the threads that emerge over time.'}
+              : 'Write something today. EchoraOS will help you understand the threads that emerge over time.'}
           </p>
           <div className="pt-2">
             <button

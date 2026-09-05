@@ -157,7 +157,7 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
             Your patterns will appear here as you write.
           </p>
           <p className="text-sm text-stone-500 dark:text-stone-400 max-w-md mx-auto leading-relaxed">
-            As you record entries, ECHORA synthesizes recurring themes, milestones, and intentions over time.
+            As you record entries, EchoraOS synthesizes recurring themes, milestones, and intentions over time.
           </p>
           <div className="pt-2">
             <button

@@ -67,7 +67,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
       {/* Top Identity & Date */}
       <section className="space-y-4">
         <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-stone-400">
-          <span>ECHORA</span>
+          <span>EchoraOS</span>
           <span>·</span>
           <span>{dateFormatted}</span>
         </div>
@@ -119,7 +119,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
               Your story starts here.
             </p>
             <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-lg">
-              Write something today. ECHORA will help you understand the threads that emerge over time.
+              Write something today. EchoraOS will help you understand the threads that emerge over time.
             </p>
             <div className="pt-3">
               <button
@@ -173,7 +173,7 @@ export const TodayView: React.FC<TodayViewProps> = ({
 
         {safeEntries.length === 0 ? (
           <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
-            As you write, ECHORA observes recurring thoughts, questions, and patterns across your entries.
+            As you write, EchoraOS observes recurring thoughts, questions, and patterns across your entries.
           </p>
         ) : (
           <div className="space-y-3">

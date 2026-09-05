@@ -68,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="flex items-center gap-2 text-left"
         >
           <span className="font-editorial text-xl font-medium tracking-tight text-stone-900 dark:text-stone-100">
-            ECHORA
+            EchoraOS
           </span>
         </button>
 
@@ -209,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="text-left group block"
           >
             <span className="font-editorial text-2xl font-medium tracking-tight text-stone-900 dark:text-stone-100 block group-hover:opacity-80 transition-opacity">
-              ECHORA
+              EchoraOS
             </span>
             <span className="text-[12px] text-stone-500 dark:text-stone-400 tracking-normal block mt-0.5 font-light">
               Your story, understood over time.

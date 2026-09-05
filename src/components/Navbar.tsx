@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <div>
                 <span className="text-lg font-semibold tracking-tight text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
-                  ECHORA
+                  EchoraOS
                   <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/80 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
                     GenAI
                   </span>

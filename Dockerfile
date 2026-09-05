@@ -1,5 +1,5 @@
 # ==============================================================================
-# ECHORA - Production Dockerfile for Google Cloud Run
+# EchoraOS - Production Dockerfile for Google Cloud Run
 # Optimized for Google Cloud Gen AI Academy APAC Ideathon
 # ==============================================================================
 

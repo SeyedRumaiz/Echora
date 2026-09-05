@@ -28,14 +28,14 @@ app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'ECHORA-Engine',
+    service: 'EchoraOS-Engine',
     hasGeminiKey: Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'MY_GEMINI_API_KEY')
   });
 });
 
 // System prompt enforcing strict anti-hallucination and privacy boundaries
 const BASE_AI_INSTRUCTIONS = `
-You are ECHORA, an intelligent, calm, and thoughtful personal reflection companion.
+You are EchoraOS, an intelligent, calm, and thoughtful personal reflection companion.
 Tagline: "Your story, understood over time."
 Your mission is to help the user understand their own thoughts, feelings, patterns, and lived experiences over time.
 Your tone is literary, empathetic, patient, trustworthy, and editorial — never robotic, clinical, or overly promotional.
@@ -335,7 +335,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`ECHORA server running on http://0.0.0.0:${PORT}`);
+    console.log(`EchoraOS server running on http://0.0.0.0:${PORT}`);
   });
 }
 

@@ -75,7 +75,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             )}
             <div>
               <div className="text-sm font-medium text-stone-900 dark:text-stone-100">
-                {user.displayName || 'ECHORA User'}
+                {user.displayName || 'EchoraOS User'}
               </div>
               <div className="text-xs text-stone-400 font-mono">
                 {user.isDemo ? 'Showcase guest account' : user.email}

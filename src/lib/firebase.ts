@@ -116,7 +116,7 @@ export const DEMO_USER: UserProfile = {
 export const INITIAL_SAMPLE_ENTRIES: Omit<JournalEntry, 'id' | 'ownerUid'>[] = [
   {
     title: "Kicking off the GenAI Academy Ideathon",
-    content: "Today was intense but exhilarating. We spent hours architecting our AI memory companion ECHORA. The biggest challenge wasn't just connecting Gemini—it was making sure the AI is truly humble, never hallucinating memories that weren't in the journal, and citing specific source entries. I felt a real sense of clarity when we finalized the Firestore security rules to guarantee per-user data isolation.",
+    content: "Today was intense but exhilarating. We spent hours architecting our AI memory companion EchoraOS. The biggest challenge wasn't just connecting Gemini—it was making sure the AI is truly humble, never hallucinating memories that weren't in the journal, and citing specific source entries. I felt a real sense of clarity when we finalized the Firestore security rules to guarantee per-user data isolation.",
     mood: "Motivated",
     tags: ["google-cloud", "ideathon", "architecture", "gemini"],
     createdAt: Date.now() - 1000 * 60 * 60 * 24 * 5, // 5 days ago
@@ -172,7 +172,7 @@ export async function getJournalEntries(uid: string): Promise<JournalEntry[]> {
     return entries;
   } catch (error) {
     console.warn('Firestore fetch failed, checking local fallback:', error);
-    const local = localStorage.getItem(`echora_entries_${uid}`);
+    const local = localStorage.getItem(`echoraos_entries_${uid}`) || localStorage.getItem(`echora_entries_${uid}`);
     if (local) {
       try {
         return JSON.parse(local);
@@ -211,7 +211,7 @@ export async function saveJournalEntry(uid: string, entry: Partial<JournalEntry>
   const updated = isNew
     ? [entryData, ...existing.filter(e => e.id !== entryId)]
     : existing.map(e => (e.id === entryId ? entryData : e));
-  localStorage.setItem(`echora_entries_${uid}`, JSON.stringify(updated));
+  localStorage.setItem(`echoraos_entries_${uid}`, JSON.stringify(updated));
 
   return entryData;
 }
@@ -226,7 +226,7 @@ export async function deleteJournalEntry(uid: string, entryId: string): Promise<
 
   const existing = await getJournalEntries(uid);
   const filtered = existing.filter(e => e.id !== entryId);
-  localStorage.setItem(`echora_entries_${uid}`, JSON.stringify(filtered));
+  localStorage.setItem(`echoraos_entries_${uid}`, JSON.stringify(filtered));
 }
 
 /* -------------------------------------------------------------
@@ -244,7 +244,7 @@ export async function getConversations(uid: string): Promise<Conversation[]> {
     return convs;
   } catch (error) {
     console.warn('Firestore conversations fetch failed:', error);
-    const local = localStorage.getItem(`echora_conversations_${uid}`);
+    const local = localStorage.getItem(`echoraos_conversations_${uid}`) || localStorage.getItem(`echora_conversations_${uid}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -261,7 +261,7 @@ export async function saveConversation(uid: string, conv: Conversation): Promise
   }
   const existing = await getConversations(uid);
   const updated = [conv, ...existing.filter(c => c.id !== conv.id)];
-  localStorage.setItem(`echora_conversations_${uid}`, JSON.stringify(updated));
+  localStorage.setItem(`echoraos_conversations_${uid}`, JSON.stringify(updated));
 }
 
 export async function deleteConversation(uid: string, conversationId: string): Promise<void> {
@@ -273,7 +273,7 @@ export async function deleteConversation(uid: string, conversationId: string): P
   }
   const existing = await getConversations(uid);
   const filtered = existing.filter(c => c.id !== conversationId);
-  localStorage.setItem(`echora_conversations_${uid}`, JSON.stringify(filtered));
+  localStorage.setItem(`echoraos_conversations_${uid}`, JSON.stringify(filtered));
 }
 
 export async function getMessages(uid: string, conversationId: string): Promise<ChatMessage[]> {
@@ -286,7 +286,7 @@ export async function getMessages(uid: string, conversationId: string): Promise<
     return msgs;
   } catch (error) {
     console.warn('Firestore messages fetch failed:', error);
-    const local = localStorage.getItem(`echora_msgs_${uid}_${conversationId}`);
+    const local = localStorage.getItem(`echoraos_msgs_${uid}_${conversationId}`) || localStorage.getItem(`echora_msgs_${uid}_${conversationId}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -303,7 +303,7 @@ export async function saveMessage(uid: string, conversationId: string, msg: Chat
   }
   const existing = await getMessages(uid, conversationId);
   const updated = [...existing, msg];
-  localStorage.setItem(`echora_msgs_${uid}_${conversationId}`, JSON.stringify(updated));
+  localStorage.setItem(`echoraos_msgs_${uid}_${conversationId}`, JSON.stringify(updated));
 }
 
 /* -------------------------------------------------------------
@@ -319,7 +319,7 @@ export async function getInsights(uid: string): Promise<LongitudinalInsight[]> {
     snap.forEach(d => list.push({ id: d.id, ...(d.data() as any) }));
     return list;
   } catch (error) {
-    const local = localStorage.getItem(`echora_insights_${uid}`);
+    const local = localStorage.getItem(`echoraos_insights_${uid}`) || localStorage.getItem(`echora_insights_${uid}`);
     if (local) {
       try { return JSON.parse(local); } catch {}
     }
@@ -336,14 +336,17 @@ export async function saveInsight(uid: string, insight: LongitudinalInsight): Pr
   }
   const existing = await getInsights(uid);
   const updated = [insight, ...existing.filter(i => i.id !== insight.id)];
-  localStorage.setItem(`echora_insights_${uid}`, JSON.stringify(updated));
+  localStorage.setItem(`echoraos_insights_${uid}`, JSON.stringify(updated));
 }
 
 /* -------------------------------------------------------------
  * Privacy: Delete All User Data
  * -----------------------------------------------------------*/
 export async function deleteAllUserData(uid: string): Promise<void> {
-  // Clear local storage for user
+  // Clear local storage for user (both echoraos and legacy echora keys)
+  localStorage.removeItem(`echoraos_entries_${uid}`);
+  localStorage.removeItem(`echoraos_conversations_${uid}`);
+  localStorage.removeItem(`echoraos_insights_${uid}`);
   localStorage.removeItem(`echora_entries_${uid}`);
   localStorage.removeItem(`echora_conversations_${uid}`);
   localStorage.removeItem(`echora_insights_${uid}`);

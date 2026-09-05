@@ -102,7 +102,7 @@ export const SourceEntryModal: React.FC<SourceEntryModalProps> = ({ entry, onClo
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-[#E8E4DC] dark:border-[#2B2724] bg-[#F5F2EC]/60 dark:bg-[#131211]/60 flex items-center justify-between text-xs text-stone-400">
-          <span>Grounded citation for ECHORA reflection.</span>
+          <span>Grounded citation for EchoraOS reflection.</span>
           <button
             id="done-source-entry-modal"
             onClick={onClose}

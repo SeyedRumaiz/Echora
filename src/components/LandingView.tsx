@@ -73,7 +73,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       <header className="max-w-4xl w-full mx-auto px-6 py-8 flex items-center justify-between">
         <div>
           <span className="font-editorial text-2xl font-medium tracking-tight text-stone-900 dark:text-stone-100">
-            ECHORA
+            EchoraOS
           </span>
           <span className="hidden sm:inline text-xs text-stone-500 dark:text-stone-400 ml-3 pl-3 border-l border-[#E8E4DC] dark:border-[#2B2724]">
             Your story, understood over time.
@@ -126,7 +126,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
           </h1>
 
           <p className="text-base sm:text-lg text-stone-600 dark:text-stone-400 max-w-xl mx-auto leading-relaxed pt-2 font-normal">
-            A private personal reflection companion. Write freely in a calm, distraction-free journal. When you ask questions, ECHORA reflects on your thoughts with honest citations to your own history.
+            A private personal reflection companion. Write freely in a calm, distraction-free journal. When you ask questions, EchoraOS reflects on your thoughts with honest citations to your own history.
           </p>
         </div>
 
@@ -190,7 +190,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
             <div className="space-y-3 max-w-lg">
               <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
-                ECHORA
+                EchoraOS
               </div>
               <p className="text-sm sm:text-base text-stone-800 dark:text-stone-200 leading-relaxed font-normal">
                 Across three recent entries, you have returned to questions about taking on too many commitments and context-switching without recovery time.
@@ -320,7 +320,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
       {/* Footer */}
       <footer className="border-t border-[#E8E4DC] dark:border-[#2B2724] py-8 text-center text-xs text-stone-400">
-        <p>ECHORA · Private AI-Powered Reflection System</p>
+        <p>EchoraOS · Private AI-Powered Reflection System</p>
         <p className="mt-1">Built with Gemini 2.5 Flash, Cloud Firestore & Google Cloud Run</p>
       </footer>
     </div>

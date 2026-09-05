@@ -192,7 +192,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
             </span>
           </div>
           <p className="font-editorial text-xl sm:text-2xl text-stone-900 dark:text-stone-100 font-medium mt-0.5">
-            "Ask ECHORA about your story."
+            "Ask EchoraOS about your story."
           </p>
         </div>
 
@@ -215,7 +215,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                 Talk to your own history.
               </p>
               <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed max-w-lg">
-                Ask about what you've written, patterns over time, shifts in mood, or specific decisions you've weighed. ECHORA cites exact entries from your archive.
+                Ask about what you've written, patterns over time, shifts in mood, or specific decisions you've weighed. EchoraOS cites exact entries from your archive.
               </p>
             </div>
 
@@ -254,10 +254,10 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
                     {msg.content}
                   </div>
                 ) : (
-                  /* ECHORA Message: Quiet, editorial layout, no giant card box */
+                  /* EchoraOS Message: Quiet, editorial layout, no giant card box */
                   <div className="space-y-4 max-w-2xl">
                     <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
-                      ECHORA
+                      EchoraOS
                     </div>
 
                     <div className="text-base sm:text-[17px] text-stone-800 dark:text-stone-200 leading-relaxed font-normal whitespace-pre-wrap">
@@ -331,7 +331,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
         {isSending && (
           <div className="space-y-2 max-w-2xl animate-pulse">
             <div className="text-[11px] font-semibold tracking-wider uppercase text-stone-400">
-              ECHORA
+              EchoraOS
             </div>
             <p className="text-sm text-stone-400 italic">
               Reflecting on your journal entries...
@@ -374,7 +374,7 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
 
         <div className="pt-2 text-center">
           <span className="text-[11px] text-stone-400">
-            ECHORA reflects exclusively on your private entries. Raw thoughts are never exposed.
+            EchoraOS reflects exclusively on your private entries. Raw thoughts are never exposed.
           </span>
         </div>
       </div>

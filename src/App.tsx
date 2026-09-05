@@ -50,7 +50,7 @@ export default function App() {
 
   // Theme
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('echora_theme') === 'dark';
+    return (localStorage.getItem('echoraos_theme') || localStorage.getItem('echora_theme')) === 'dark';
   });
 
   // Data State
@@ -84,16 +84,16 @@ export default function App() {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('echora_theme', 'dark');
+      localStorage.setItem('echoraos_theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('echora_theme', 'light');
+      localStorage.setItem('echoraos_theme', 'light');
     }
   }, [darkMode]);
 
   // Listen to Firebase Auth state
   useEffect(() => {
-    const savedDemo = localStorage.getItem('echora_is_demo');
+    const savedDemo = localStorage.getItem('echoraos_is_demo') || localStorage.getItem('echora_is_demo');
 
     if (savedDemo === 'true') {
       setUser(DEMO_USER);
@@ -318,7 +318,7 @@ export default function App() {
   const handleExportData = () => {
     if (!user) return;
     const payload = {
-      product: 'ECHORA',
+      product: 'EchoraOS',
       exportedAt: new Date().toISOString(),
       user: {
         uid: user.uid,
@@ -332,7 +332,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `echora_archive_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `echoraos_archive_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     showToast('Journal archive downloaded.', 'success');
@@ -354,14 +354,15 @@ export default function App() {
 
   // Auth Handlers
   const handleSignOut = async () => {
+    localStorage.removeItem('echoraos_is_demo');
     localStorage.removeItem('echora_is_demo');
     await signOutUser();
     setUser(null);
-    showToast('Signed out of ECHORA.', 'info');
+    showToast('Signed out of EchoraOS.', 'info');
   };
 
   const handleLaunchDemo = () => {
-    localStorage.setItem('echora_is_demo', 'true');
+    localStorage.setItem('echoraos_is_demo', 'true');
     setUser(DEMO_USER);
     showToast('Entered Showcase Mode with private seed reflections.', 'success');
   };
@@ -378,7 +379,7 @@ export default function App() {
         <div className="text-center space-y-3">
           <div className="w-8 h-8 border-2 border-stone-300 dark:border-stone-700 border-t-stone-900 dark:border-t-stone-100 rounded-full animate-spin mx-auto" />
           <p className="font-editorial text-sm tracking-wide text-stone-500">
-            Initializing ECHORA...
+            Initializing EchoraOS...
           </p>
         </div>
       </div>
