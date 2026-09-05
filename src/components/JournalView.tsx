@@ -445,6 +445,7 @@ export const JournalView: React.FC<JournalViewProps> = ({
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
             placeholder="Write your thoughts freely. EchoraOS will help you understand their shape over time..."
+            aria-label="Entry content"
             className="w-full text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-200 placeholder:text-stone-400/50 bg-transparent border-0 outline-none p-0 resize-none min-h-[360px]"
           />
 
