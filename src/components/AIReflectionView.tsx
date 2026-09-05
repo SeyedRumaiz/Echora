@@ -17,6 +17,7 @@ import type {
   UserProfile
 } from '../types';
 import { sendChatMessage } from '../services/aiService';
+import { splitOnCitations, parseCitations } from '../../shared/citations';
 
 interface AIReflectionViewProps {
   user: UserProfile;
@@ -103,27 +104,16 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
     );
   };
 
-  // Render formatted message text with inline parsed citations [[REF:id|title|date]]
+  // Render formatted message text with inline parsed citations [[REF:id|title|date]],
+  // using the shared parser so the format can never drift from the server's.
   const renderMessageContent = (content: string) => {
     if (!content) return '';
-    const regex = /\[\[REF:([^|\]]+)\|([^|\]]+)\|([^\]]+)\]\]/g;
-    const parts: (string | React.ReactNode)[] = [];
-    let lastIndex = 0;
-    let match: RegExpExecArray | null;
-
-    while ((match = regex.exec(content)) !== null) {
-      const matchIndex = match.index;
-      if (matchIndex > lastIndex) {
-        parts.push(content.substring(lastIndex, matchIndex));
-      }
-
-      const refId = match[1];
-      const refTitle = match[2];
-      const refDate = match[3];
-
-      parts.push(
+    return splitOnCitations(content).map((segment, idx) => {
+      if (segment.type === 'text') return segment.value;
+      const { id: refId, title: refTitle, date: refDate } = segment.value;
+      return (
         <button
-          key={`ref-${matchIndex}`}
+          key={`ref-${idx}`}
           type="button"
           onClick={() => {
             const entry = findEntry(refId, refTitle);
@@ -139,36 +129,11 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
           [ {refTitle} · {refDate} ]
         </button>
       );
-
-      lastIndex = regex.lastIndex;
-    }
-
-    if (content && lastIndex < content.length) {
-      parts.push(content.substring(lastIndex));
-    }
-
-    return parts;
+    });
   };
 
   // Extract all citations from a message for the dedicated Sources footer
-  const extractSources = (content: string) => {
-    if (!content) return [];
-    const regex = /\[\[REF:([^|\]]+)\|([^|\]]+)\|([^\]]+)\]\]/g;
-    const sources: { id: string; title: string; date: string }[] = [];
-    const seen = new Set<string>();
-
-    let match: RegExpExecArray | null;
-    while ((match = regex.exec(content)) !== null) {
-      const id = match[1];
-      const title = match[2];
-      const date = match[3];
-      if (!seen.has(id)) {
-        seen.add(id);
-        sources.push({ id, title, date });
-      }
-    }
-    return sources;
-  };
+  const extractSources = (content: string) => parseCitations(content);
 
   // Starters
   const starterPrompts = [
