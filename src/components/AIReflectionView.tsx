@@ -83,7 +83,10 @@ export const AIReflectionView: React.FC<AIReflectionViewProps> = ({
       await onSendMessage(text);
     } catch (err) {
       console.error('Failed to send reflection message:', err);
-      onShowToast('Could not reach reflection service.', 'error');
+      const message = err instanceof Error && err.message
+        ? err.message
+        : 'Could not reach the reflection service. Please try again.';
+      onShowToast(message, 'error');
     } finally {
       setIsSending(false);
     }
